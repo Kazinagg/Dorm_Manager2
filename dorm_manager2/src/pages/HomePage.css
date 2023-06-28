@@ -39,9 +39,7 @@
 }
 
 .Login-div{
-  position: absolute;
-  margin-right: 10%;
-  padding-right: 0;
+  position:fixed; top:0; right:0; width:130px;
 }
 
 

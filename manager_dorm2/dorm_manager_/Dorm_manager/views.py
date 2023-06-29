@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from .models import YourModel
 
-from django.shortcuts import render
-from django.http import HttpResponse
+def get_data(request):
+    data = list(YourModel.objects.values())
+    return JsonResponse(data, safe=False)
 
-def index(request):
-    return HttpResponse("Привет, мир! Это ваше представление (view).")
 

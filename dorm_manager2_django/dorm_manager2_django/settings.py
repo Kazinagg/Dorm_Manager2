@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 ]
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'myapp/build/static'),
+    os.path.join(BASE_DIR, 'myapp_react/build/static'),
 ]
 
 MIDDLEWARE = [

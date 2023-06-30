@@ -9,9 +9,9 @@ type Student = {
   last_name: string;
   birth_date: string;
   gender: string;
-  country_id: number;
-  phone: string;
-  email: string;
+  country_name: number;
+  // phone: string;
+  // email: string;
 };
 
 type SortConfig = {
@@ -72,18 +72,27 @@ const HomePage: React.FC = () => {
         </p>
         <table>
           <thead>
-            <tr>
-              <th onClick={() => requestSort('first_name')}>First Name</th>
-              <th onClick={() => requestSort('last_name')}>Last Name</th>
-              {/* Добавьте другие столбцы по мере необходимости */}
-            </tr>
+          <tr>
+            <th onClick={() => requestSort('first_name')}>First Name</th>
+            <th onClick={() => requestSort('last_name')}>Last Name</th>
+            <th onClick={() => requestSort('birth_date')}>Birth Date</th>
+            {/* <th onClick={() => requestSort('email')}>Email</th> */}
+            <th onClick={() => requestSort('gender')}>Gender</th>
+            <th onClick={() => requestSort('country_name')}>country_name</th>
+            {/* <th onClick={() => requestSort('phone')}>Phone</th> */}
+          </tr>
           </thead>
           <tbody>
             {rows.map((row, index) => (
               <tr key={index}>
                 <td>{row.first_name}</td>
                 <td>{row.last_name}</td>
-                {/* Добавьте другие ячейки по мере необходимости */}
+                <td>{row.birth_date}</td>
+                {/* <td>{row.email}</td> */}
+                <td>{row.gender}</td>
+                <td>{row.country_name}</td>
+                {/* <td>{row.phone}</td> */}
+
               </tr>
             ))}
           </tbody>

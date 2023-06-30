@@ -19,11 +19,15 @@ from django.urls import path
 from myapp import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
+from django.urls import re_path
 
 urlpatterns = [
     path('', views.index),
     path('admin/', admin.site.urls),
     path('api/data/', views.get_students),
+    path('api/auth/', views.get_admin),
+    re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

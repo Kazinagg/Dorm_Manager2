@@ -68,7 +68,7 @@ const HomePage: React.FC = () => {
       <div className="home-page">
         <h1 className="home-page__title">Добро пожаловать на главную страницу</h1>
         <p className="home-page__info">
-          Жители этого общажного ада да.
+          Жители этого общажного ада.
         </p>
         <table>
           <thead>

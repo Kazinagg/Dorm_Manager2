@@ -73,12 +73,12 @@ const HomePage: React.FC = () => {
         <table>
           <thead>
           <tr>
-            <th onClick={() => requestSort('first_name')}>First Name</th>
-            <th onClick={() => requestSort('last_name')}>Last Name</th>
-            <th onClick={() => requestSort('birth_date')}>Birth Date</th>
+            <th onClick={() => requestSort('first_name')}>Имя</th>
+            <th onClick={() => requestSort('last_name')}>Фамилия</th>
+            <th onClick={() => requestSort('birth_date')}>День рождения</th>
             {/* <th onClick={() => requestSort('email')}>Email</th> */}
-            <th onClick={() => requestSort('gender')}>Gender</th>
-            <th onClick={() => requestSort('country_name')}>country_name</th>
+            <th onClick={() => requestSort('gender')}>Пол</th>
+            <th onClick={() => requestSort('country_name')}>Страна</th>
             {/* <th onClick={() => requestSort('phone')}>Phone</th> */}
           </tr>
           </thead>

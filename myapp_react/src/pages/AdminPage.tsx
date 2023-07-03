@@ -124,11 +124,15 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         <p className="home-page__info">
           Жители этого общажного ада.
         </p>
-        <button className="login-button" onClick={() => setShowForm(!showForm)}>
-        {showForm ? 'Скрыть форму' : 'Добавить нового студента'}
-        </button>
+        <button className="login-button" onClick={() => setShowForm(!showForm)}>Добавить нового студента</button>
         {showForm && (
         <div className="add-student-form">
+        
+        
+        {/* <div > */}
+          <button className="login-button" onClick={() => setShowForm(!showForm)}>
+            Скрыть форму 
+          </button>
           <h2>Добавить нового студента</h2>
           <input name="first_name" value={newStudent.first_name} onChange={handleInputChange} placeholder="Имя" />
           <input name="last_name" value={newStudent.last_name} onChange={handleInputChange} placeholder="Фамилия" />
@@ -142,6 +146,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
           <button onClick={handleAddStudent}>Добавить студента</button>
         </div>
         )}
+        {/* </div> */}
+        
         <table>
           <thead>
           <tr>

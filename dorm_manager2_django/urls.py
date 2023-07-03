@@ -27,6 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/data/', views.get_students),
     path('api/data/ollStudent/', views.get_ollStudents),
+    path('api/data/addStudent/', views.add_ollStudents),
     path('api/auth/', views.get_admin),
     re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

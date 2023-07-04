@@ -1,36 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AdminPage from './pages/AdminPage';
+import UserPage from './pages/UserPage';
+import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
 
 const App: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedInAdmin, setIsLoggedInAdmin] = useState(false);
+  const [isLoggedInUser, setIsLoggedInUser] = useState(false);
+  const [id, setId] = useState<number | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setIsLoggedIn(true);
+      setIsLoggedInAdmin(true);
     }
   }, []);
 
-  const handleLogin = (username: string, password: string) => {
-    setIsLoggedIn(true);
+  const handleLogin = (type: boolean, id: number) => {
+    setId(id);
+    if (type){
+      setIsLoggedInAdmin(true);
+      console.log("setIsLoggedInAdmin")
+    } else{
+      console.log("setIsLoggedInUser")
+      setIsLoggedInUser(true);
+    }
     localStorage.setItem('token', 'your token');
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    setIsLoggedInAdmin(false);
+    setIsLoggedInUser(false);
+    setId(null);
     localStorage.removeItem('token');
   };
 
   return (
     <Router>
      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-        {isLoggedIn && (
+       <Route path="/" element={<HomePage />} />
+       <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+        {isLoggedInAdmin && (
           <Route path="/admin" element={<AdminPage onLogout={handleLogout} />} />
+        )}
+        {isLoggedInUser && id && (
+         <Route path="/user" element={<UserPage userId={id} onLogout={handleLogout} />} />
         )}
       </Routes>
     </Router>
@@ -38,5 +53,6 @@ const App: React.FC = () => {
 };
 
 export default App;
+
 
 

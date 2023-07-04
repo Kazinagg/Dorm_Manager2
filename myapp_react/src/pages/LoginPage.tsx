@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+// import { type } from 'os';
 
 interface LoginPageProps {
-  onLogin: (username: string, password: string) => void;
+  onLogin: (type: boolean, id: number) => void;
 }
 
 type admins = {
@@ -13,26 +14,47 @@ type admins = {
   password: string;
 };
 
+type user = {
+  user_id: number;
+  username: string;
+  password: string;
+}
+
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [rows, setRows] = useState<admins[]>([]);
+  // const [user_id, setUser_id] = useState();
+  // const [admin_id, setAdmin_id] = useState();
+  const [RowsAdmins, setRowsAdmins] = useState<admins[]>([]);
+  const [RowsUser, setRowsUser] = useState<user[]>([]);
   const navigate = useNavigate();
+  // const [type, setType] = useState();
 
   useEffect(() => {
-    axios.get('/api/auth/')
+    axios.get('/api/auth/admin/')
       .then(response => {
-        setRows(response.data);
+        setRowsAdmins(response.data);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios.get('/api/auth/user/')
+      .then(response => {
+        setRowsUser(response.data);
       });
   }, []);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const admin = rows.find(row => row.username === username && row.password === password);
+    const admin = RowsAdmins.find(row => row.username === username && row.password === password);
+    const user = RowsUser.find(row => row.username === username && row.password === password);
     if (admin) {
-      onLogin(username, password);
+      onLogin(true, admin.admin_id);
       navigate('/admin');
-    } else {
+    }else if (user){
+      onLogin(false, user.user_id);
+      navigate('/user');
+    }else {
       alert('Неверное имя пользователя или пароль');
     }
   };

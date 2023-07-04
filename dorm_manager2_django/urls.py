@@ -28,8 +28,15 @@ urlpatterns = [
     path('api/data/', views.get_students),
     path('api/data/ollStudent/', views.get_ollStudents),
     path('api/data/addStudent/', views.add_ollStudents),
-    path('api/auth/', views.get_admin),
+    path('api/auth/admin/', views.get_admin),
+    path('api/auth/user/', views.get_users),
     path('api/countries/', views.get_countries),
+
+    path('students/<int:studentId>', views.get_student),
+    path('students/<int:studentId>/update', views.update_student),
+    path('students/<int:studentId>/change-password', views.change_password),
+    path('students/<int:studentId>/delete', views.delete_student),
+
     re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

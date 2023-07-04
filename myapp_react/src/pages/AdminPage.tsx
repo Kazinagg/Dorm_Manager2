@@ -16,6 +16,10 @@ type Student = {
   password:string;
   email: string;
 };
+type Countries = {
+  country_id: number;
+  country_name: string;
+};
 
 type SortConfig = {
   key: keyof Student;
@@ -30,6 +34,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'first_name', direction: 'ascending' });
   const [rows, setRows] = useState<Student[]>([]);
   const navigate = useNavigate();
+  //const [newStudent, setNewStudent] = useState({});
+  const [countries, setCountries] = useState<Countries[]>([]);
   const [newStudent, setNewStudent] = useState<Student>({
     student_id: 0,
     first_name: '',
@@ -44,7 +50,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   });
   const [showForm, setShowForm] = useState(false);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event:  React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setNewStudent({
       ...newStudent,
       [event.target.name]: event.target.value,
@@ -123,6 +129,16 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     }
   }, [sortConfig]);
 
+  useEffect(() => {
+    axios.get('/api/countries/')
+      .then(response => {
+        setCountries(response.data);
+      })
+      .catch(error => {
+        console.error('There was an!', error);
+      });
+  }, []);
+
   const requestSort = (key: keyof Student) => {
     let direction: 'ascending' | 'descending' = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -162,12 +178,14 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
           <input name="last_name" value={newStudent.last_name} onChange={handleInputChange} placeholder="Фамилия" />
           <input type="date" name="birth_date" value={newStudent.birth_date} onChange={handleInputChange} placeholder="День рождения" />
           <input name="gender" value={newStudent.gender} onChange={handleInputChange} placeholder="Пол" />
-          <input name="country_id" value={newStudent.country_id} onChange={handleInputChange} placeholder="Страна" />
+          <select name="country_id" value={newStudent.country_id} onChange={handleInputChange}>
+          {countries.map(country => (
+          <option key={country.country_id} value={country.country_id}>{country.country_name}</option>
+            ))}
+          </select>
           <input name="phone" value={newStudent.phone} onChange={handleInputChange} placeholder="Телефон" />
-          {/* <input name="username" value={newStudent.username} onChange={handleInputChange} placeholder="Логин" />
-          <input name="password" value={newStudent.password} onChange={handleInputChange} placeholder="Пароль" /> */}
-          <input name="email" value={newStudent.email} onChange={handleInputChange} placeholder="Email" />
-          <button onClick={handleAddStudent}>Добавить студента</button>
+      <input name="email" value={newStudent.email} onChange={handleInputChange} placeholder="Email" />
+      <button onClick={handleAddStudent}>Добавить студента</button>
         </div>
         )}
         {/* </div> */}

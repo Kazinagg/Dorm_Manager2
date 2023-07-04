@@ -11,11 +11,16 @@ class student_country_view(models.Model):
     # phone = models.CharField(max_length=15, blank=True, default='')
     # email = models.EmailField(max_length=100, blank=True, default='')
 
+
     class Meta:
         db_table = 'student_country_view'
 
+class countries(models.Model):
+    country_id = models.IntegerField(primary_key=True)
+    country_name = models.CharField(max_length=100)
 
-
+    class Meta:
+        db_table = 'countries'
 
 class users_admins_view(models.Model):
     admin_id = models.IntegerField(primary_key=True)

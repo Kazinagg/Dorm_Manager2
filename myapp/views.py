@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import student_country_view, users_admins_view, student_info
-from django.db import connection, json
+from django.db import connection
+import json
 
 def index(request):
     return render(request, 'index.html')
@@ -25,15 +26,15 @@ def add_ollStudents(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         with connection.cursor() as cursor:
-            cursor.execute("SELECT add_student(%s, %s, %s, %s, %s, %s, %s, %s, %s)", [
-                data['student_id'],
+            cursor.execute("SELECT add_student(%s, %s, %s, %s, %s, %s, %s)", [
+                # data['student_id'],
                 data['first_name'],
                 data['last_name'],
                 data['birth_date'],
                 data['gender'],
                 data['country_id'],
                 data['phone'],
-                data['user_id'],
+                # data['user_id'],
                 data['email']
             ])
         return JsonResponse({'message': 'Student added successfully'})

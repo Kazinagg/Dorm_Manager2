@@ -29,6 +29,7 @@ class users_admins_view(models.Model):
 
 class student_info(models.Model):
     student_id = models.IntegerField(primary_key=True)
+    user = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     birth_date = models.DateField(null=True, blank=True)

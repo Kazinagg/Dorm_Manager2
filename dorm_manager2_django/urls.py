@@ -32,10 +32,10 @@ urlpatterns = [
     path('api/auth/user/', views.get_users),
     path('api/countries/', views.get_countries),
 
-    path('students/<int:studentId>', views.get_student),
-    path('students/<int:studentId>/update', views.update_student),
-    path('students/<int:studentId>/change-password', views.change_password),
-    path('students/<int:studentId>/delete', views.delete_student),
+    path('api/users/get/<int:user_id>', views.get_student, name='get_student'),
+    # path('api/users/<int:studentId>', views.update_student, name='update_student'),
+    path('api/usersint/<int:studentId>/change-password', views.change_password, name='change_password'),
+    # path('api/users/<int:studentId>', views.delete_student, name='delete_student'),
 
     re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

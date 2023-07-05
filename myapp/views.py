@@ -8,10 +8,11 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from .models import student_info, Users
 
-def get_student(request, studentId):
-    student = get_object_or_404(student_info, student_id=studentId)
+def get_student(request, user_id):
+    student = get_object_or_404(student_info, user_id=user_id)
     student_data = {
         'student_id': student.student_id,
+        'user_id': student.user_id,
         'first_name': student.first_name,
         'last_name': student.last_name,
         'birth_date': student.birth_date,

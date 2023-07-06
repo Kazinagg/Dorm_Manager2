@@ -93,7 +93,12 @@ const App: React.FC = () => {
               exit={{ opacity: 0 }}
             />
           )}
-        <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Home</Link>
+
+
+        <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Home</Link> <br/>
+        <Link to="/students" style={{ color: '#fff', textDecoration: 'none' }}>дибылы</Link>
+
+
         </motion.div>
       </div>
       

@@ -11,7 +11,7 @@ const HomePage = () => {
             // height у //',vh100 ':становите высоту по вашему усмотрению
     }}>
       <Link to="/students" className="login-button">
-        Войти
+        дибылы
       </Link>
     </div>
     );

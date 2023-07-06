@@ -73,15 +73,16 @@ const App: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           {isHovered ? (
-           <motion.img 
-              key="open"
-              src={logo} 
-              alt="Лого" 
-              style={{width: '100%', margin: '16px' }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
+            <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}><motion.img 
+            key="open"
+            src={logo} 
+            alt="Лого" 
+            style={{width: '100%', margin: '16px' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          /></Link>
+           
           ) : (
             <motion.img 
               key="closed"

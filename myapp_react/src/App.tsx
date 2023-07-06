@@ -96,7 +96,25 @@ const App: React.FC = () => {
 
 
         <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Home</Link> <br/>
-        <Link to="/students" style={{ color: '#fff', textDecoration: 'none' }}>дибылы</Link>
+        <Link to="/students" style={{ color: '#fff', textDecoration: 'none' }}>дибылы</Link><br/>
+        
+        {!isLoggedInAdmin && !isLoggedInUser && (
+          <div>
+            <Link to="/login" style={{ color: '#fff', textDecoration: 'none' }}>Войти</Link>
+          </div>
+        )}
+        {isLoggedInAdmin && (
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <Link to="/admin" style={{ color: '#fff', textDecoration: 'none' }}>Панель администратора</Link> <div style={{ color: '#fff', textDecoration: 'none' }}> | </div>
+            <div onClick={() => handleLogout()} style={{ color: '#fff', textDecoration: 'none', cursor: 'pointer' }}>Выйти</div>
+          </div>
+        )}
+        {isLoggedInUser && id && (
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <Link to="/user" style={{ color: '#fff', textDecoration: 'none' }}>Личный кабинет</Link> <div style={{ color: '#fff', textDecoration: 'none' }}> | </div>
+            <div onClick={() => handleLogout()} style={{ color: '#fff', textDecoration: 'none', cursor: 'pointer' }}>Выйти</div>
+          </div>
+        )}
 
 
         </motion.div>

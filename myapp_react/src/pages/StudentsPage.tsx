@@ -63,9 +63,9 @@ const StudentsPage: React.FC = () => {
 
   return (
     <div>
-      <div className="Login-div">
+      {/* <div className="Login-div">
         <Link to="/login" className="login-button">Войти</Link>
-      </div>
+      </div> */}
       <div className="home-page">
         <h1 className="home-page__title">Добро пожаловать на главную страницу</h1>
         <p className="home-page__info">

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HomePage.css';
+import './AdminPage.css';
 import { useNavigate } from 'react-router-dom';
 
 type Student = {
@@ -35,6 +36,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'first_name', direction: 'ascending' });
   const [rows, setRows] = useState<Student[]>([]);
   const navigate = useNavigate();
+  const [students, setStudents] = useState<Student[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   //const [newStudent, setNewStudent] = useState({});
   const [countries, setCountries] = useState<Countries[]>([]);
   const [newStudent, setNewStudent] = useState<Student>({
@@ -172,28 +175,39 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     navigate('/');
   }
 
+  const handleSelectStudent = (student: Student) => {
+    setSelectedStudent(student);
+  };
+
+  const handleCloseEditForm = () => {
+    setSelectedStudent(null);
+  };
+
+  const handleDeleteStudent = (studentId: number) => {
+    // Здесь должен быть ваш код для удаления студента
+  };
+
+  const handleUpdateStudent = (student: Student) => {
+    // Здесь должен быть ваш код для обновления данных студента
+  };
+
   return (
     <div>
-      {/* <h1>Страница администратора</h1> */}
-      <div>
-      <div className="Login-div">
-        <button className="login-button" onClick={buttonOnLogout}>Logout</button>
-      </div>
-      <div className="home-page">
-        <h1 className="home-page__title">Страница администратора</h1>
-        <p className="home-page__info">
-          Жители этого общажного ада.
-        </p>
-        <button className="login-button" onClick={() => setShowForm(!showForm)}>Добавить нового студента</button>
-        {showForm && (
-        <div className="add-student-form">
-        
-        
-        {/* <div > */}
-          <button className="login-button" onClick={() => setShowForm(!showForm)}>
-            Скрыть форму 
-          </button>
-          <h2>Добавить нового студента</h2>
+    <div className="Login-div">
+      <button className="btn" onClick={buttonOnLogout}>Logout</button>
+    </div>
+    <div className="home-page">
+      <h1 className="home-page__title">Страница администратора</h1>
+      <p className="home-page__info">
+        Жители этого общажного ада.
+      </p>
+      <button className="btn" onClick={() => setShowForm(!showForm)}>Добавить нового студента</button>
+      {showForm && (
+      <div className="add-student-form">
+        <button className="btn" onClick={() => setShowForm(!showForm)}>
+          X
+        </button>
+        <h2>Добавить нового студента</h2>
           <input name="first_name" value={newStudent.first_name} onChange={handleInputChange} placeholder="Имя" />
           <input name="last_name" value={newStudent.last_name} onChange={handleInputChange} placeholder="Фамилия" />
           <input type="date" name="birth_date" value={newStudent.birth_date} onChange={handleInputChange} placeholder="День рождения" />
@@ -205,9 +219,10 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
           </select>
           <input name="phone" value={newStudent.phone} onChange={handleInputChange} placeholder="Телефон" />
       <input name="email" value={newStudent.email} onChange={handleInputChange} placeholder="Email" />
-      <button onClick={handleAddStudent}>Добавить студента</button>
-        </div>
-        )}
+      {/* <button onClick={handleAddStudent}>Добавить студента</button> */}
+      <button className="btn" onClick={handleAddStudent}>Добавить студента</button>
+      </div>
+      )}
         {/* </div> */}
         <input
           type="text"
@@ -220,12 +235,12 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
           <tr>
             <th onClick={() => requestSort('first_name')}>Имя</th>
             <th onClick={() => requestSort('last_name')}>Фамилия</th>
-            <th onClick={() => requestSort('birth_date')}>День рождения</th>
+            {/* <th onClick={() => requestSort('birth_date')}>День рождения</th> */}
             <th onClick={() => requestSort('email')}>Email</th>
             <th onClick={() => requestSort('gender')}>Пол</th>
             <th onClick={() => requestSort('country_name')}>Страна</th>
-            <th onClick={() => requestSort('username')}>Логин</th>
-            <th onClick={() => requestSort('password')}>Пароль</th>
+            {/* <th onClick={() => requestSort('username')}>Логин</th> */}
+            {/* <th onClick={() => requestSort('password')}>Пароль</th> */}
             <th onClick={() => requestSort('phone')}>Phone</th>
           </tr>
           </thead>
@@ -234,22 +249,41 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
               <tr key={index}>
                 <td>{row.first_name}</td>
                 <td>{row.last_name}</td>
-                <td>{row.birth_date}</td>
+                {/* <td>{row.birth_date}</td> */}
                 <td>{row.email}</td>
                 <td>{row.gender}</td>
                 <td>{row.country_name}</td>
-                <td>{row.username}</td>
-                <td>{row.password}</td>
+                {/* <td>{row.username}</td> */}
+                {/* <td>{row.password}</td> */}
                 <td>{row.phone}</td>
-                <td>изменить "вьеди кнопку"</td>
+                <td>
+                  <button className="btn" onClick={() => handleSelectStudent(row)}>Показать</button>
+                </td>
 
               </tr>
             ))}
           </tbody>
         </table>
+
+        {selectedStudent && (
+      <div className="student-info">
+        <h2>Информация о студенте</h2>
+          <p>Имя: {selectedStudent.first_name}</p>
+          <p>Фамилия: {selectedStudent.last_name}</p>
+          <p>Email: {selectedStudent.email}</p>
+          <p>Пол: {selectedStudent.gender}</p>
+          <p>Страна: {selectedStudent.country_name}</p>
+          <p>Phone: {selectedStudent.phone}</p>
+          <p>День рождения: {selectedStudent.birth_date}</p>
+          <p>Имя пользователя: {selectedStudent.username}</p>
+          <p>Пароль: {selectedStudent.password}</p>
+        <button className="btn" onClick={() => handleDeleteStudent(selectedStudent.student_id)}>Удалить</button>
+        <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
+        <button className="btn" onClick={() => handleCloseEditForm()}>Закрыть</button>
       </div>
+    )}
     </div>
-    </div>
+  </div>
   );
 };
 

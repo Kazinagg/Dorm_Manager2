@@ -204,7 +204,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       <button className="btn" onClick={() => setShowForm(!showForm)}>Добавить нового студента</button>
       {showForm && (
       <div className="add-student-form">
-        <button className="btn" onClick={() => setShowForm(!showForm)}>
+        <button className="btn close-btn" onClick={() => setShowForm(!showForm)}>
           X
         </button>
         <h2>Добавить нового студента</h2>
@@ -225,10 +225,17 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       )}
         {/* </div> */}
         <input
-          type="text"
-          placeholder="Поиск"
-          value={searchTerm}
-          onChange={handleSearchChange}
+            type="text"
+            placeholder="Поиск"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            style={{
+                padding: "12px 20px",
+                margin: "8px 0",
+                boxSizing: "border-box",
+                border: "2px solid #ccc",
+                borderRadius: "4px"
+            }}
         />
         <table>
           <thead>

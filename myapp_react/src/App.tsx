@@ -106,7 +106,7 @@ const App: React.FC = () => {
         )}
         {isLoggedInAdmin && (
           <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <Link to="/admin" style={{ color: '#fff', textDecoration: 'none' }}>Панель администратора</Link> <div style={{ color: '#fff', textDecoration: 'none' }}> | </div>
+            <Link to="/admin" style={{ color: '#fff', textDecoration: 'none' }}>Админ-панель</Link> <div style={{ color: '#fff', textDecoration: 'none' }}> | </div>
             <div onClick={() => handleLogout()} style={{ color: '#fff', textDecoration: 'none', cursor: 'pointer' }}>Выйти</div>
           </div>
         )}

@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import AdminPage from './pages/AdminPage';
 import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
+import StudentsPage from './pages/StudentsPage';
 import logo from './images/logo.png';
+import logo_min from './images/logo_min.png';
 
 const App: React.FC = () => {
   const [isLoggedInAdmin, setIsLoggedInAdmin] = useState(false);
   const [isLoggedInUser, setIsLoggedInUser] = useState(false);
   const [id, setId] = useState<number | null>(null);
+  
 
   useEffect(() => {
     const adminToken = localStorage.getItem('adminToken');
@@ -50,24 +54,64 @@ const App: React.FC = () => {
   };
 
 
+  const [isHovered, setIsHovered] = useState(false);
+  const navVariants = {
+    open: { opacity: 1, x: 0 },
+    closed: { opacity: '50%', x: "-90%" },
+  };
+
+  
+
   return (
-    <div>
-      <div style={{position: 'absolute',/* margin: '10px' background: '#1f2932'*/}}>
-        <img src={logo} alt="Лого" style={{ width: '20%', height: '20%', margin: '16px' }} />
+    <Router>
+      <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+        <motion.div 
+          style={{position: 'absolute', maxWidth: '15%', background: '#1f2932', height: '100%'}}
+          initial="closed"
+          animate={isHovered ? "open" : "closed"}
+          variants={navVariants}
+          transition={{ duration: 0.8 }}
+        >
+          {isHovered ? (
+           <motion.img 
+              key="open"
+              src={logo} 
+              alt="Лого" 
+              style={{width: '100%', margin: '16px' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+          ) : (
+            <motion.img 
+              key="closed"
+              src={logo_min} 
+              alt="Лого" 
+              style={{width: '20%', margin: '16px 16px 16px 90%' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+          )}
+        <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Home</Link>
+        </motion.div>
       </div>
-      <Router>
+      
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/students" element={<StudentsPage />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-          {isLoggedInAdmin && (
-            <Route path="/admin" element={<AdminPage onLogout={handleLogout} />} />
-          )}
-          {isLoggedInUser && id && (
+        {isLoggedInAdmin &&            (
+          <Route path="/admin" element={<AdminPage onLogout={handleLogout} />} />
+        )}
+        {isLoggedInUser && id && (
           <Route path="/user" element={<UserPage userId={id} onLogout={handleLogout} />} />
-          )}
-        </Routes>
-      </Router>
-    </div>
+        )}
+      </Routes>
+
+
+    </Router>
+    
   );
 };
 

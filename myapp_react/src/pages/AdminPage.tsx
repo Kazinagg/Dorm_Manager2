@@ -10,6 +10,7 @@ type Student = {
   last_name: string;
   birth_date: string;
   gender: string;
+  country_name: string;
   country_id: number;
   phone: string;
   username: string;
@@ -43,6 +44,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     birth_date: '',
     gender: '',
     country_id: 0,
+    country_name: '',
     phone: '',
     username: '',
     password: '',
@@ -75,6 +77,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         birth_date: '',
         gender: '',
         country_id: 0,
+        country_name: '',
         phone: '',
         username: '',
         password: '',
@@ -82,7 +85,24 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       });
     });
   };
-  
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredRows = rows.filter(
+    (row) =>
+      row.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      row.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      row.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      row.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      row.country_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      row.email.toLowerCase().includes(searchTerm.toLowerCase())
+      // добавьте здесь другие поля, по которым вы хотите фильтровать
+  );
+    
   function getCookie(name: string): string | null {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -97,7 +117,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     }
     return cookieValue;
   }
-  
+
   
 
   useEffect(() => {
@@ -189,7 +209,12 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         </div>
         )}
         {/* </div> */}
-        
+        <input
+          type="text"
+          placeholder="Поиск"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
         <table>
           <thead>
           <tr>
@@ -198,21 +223,21 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
             <th onClick={() => requestSort('birth_date')}>День рождения</th>
             <th onClick={() => requestSort('email')}>Email</th>
             <th onClick={() => requestSort('gender')}>Пол</th>
-            <th onClick={() => requestSort('country_id')}>Страна</th>
+            <th onClick={() => requestSort('country_name')}>Страна</th>
             <th onClick={() => requestSort('username')}>Логин</th>
             <th onClick={() => requestSort('password')}>Пароль</th>
             <th onClick={() => requestSort('phone')}>Phone</th>
           </tr>
           </thead>
           <tbody>
-            {rows.map((row, index) => (
+            {filteredRows.map((row, index) => (
               <tr key={index}>
                 <td>{row.first_name}</td>
                 <td>{row.last_name}</td>
                 <td>{row.birth_date}</td>
                 <td>{row.email}</td>
                 <td>{row.gender}</td>
-                <td>{row.country_id}</td>
+                <td>{row.country_name}</td>
                 <td>{row.username}</td>
                 <td>{row.password}</td>
                 <td>{row.phone}</td>

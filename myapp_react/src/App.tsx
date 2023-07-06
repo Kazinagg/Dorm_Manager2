@@ -66,7 +66,7 @@ const App: React.FC = () => {
     <Router>
       <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         <motion.div 
-          style={{position: 'absolute', maxWidth: '15%', background: '#1f2932', height: '100%'}}
+          style={{position: 'fixed', maxWidth: '15%', background: '#1f2932', height: '100%'}}
           initial="closed"
           animate={isHovered ? "open" : "closed"}
           variants={navVariants}

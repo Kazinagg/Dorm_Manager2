@@ -34,9 +34,10 @@ interface AdminPageProps {
 
 const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'first_name', direction: 'ascending' });
+  // const [student, setStudent] = useState<Student>(selectedStudent);
   const [rows, setRows] = useState<Student[]>([]);
   const navigate = useNavigate();
-  const [students, setStudents] = useState<Student[]>([]);
+  // const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   //const [newStudent, setNewStudent] = useState({});
   const [countries, setCountries] = useState<Countries[]>([]);
@@ -186,11 +187,24 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const handleDeleteStudent = (studentId: number) => {
     // Здесь должен быть ваш код для удаления студента
   };
-
-  const handleUpdateStudent = (student: Student) => {
-    // Здесь должен быть ваш код для обновления данных студента
+  // if (selectedStudent) {
+    // const [student, setStudent] = useState<Student>(selectedStudent);
+  
+    const handleUpdateStudent = (student: Student) => {
+      // Здесь должен быть ваш код для обновления данных студента
+      // Например, отправка запроса PUT на сервер с обновленными данными студента
+      axios.post('/api/data/updateStudent/' + student.student_id + '/', student)
+        .then(response => {
+          // Обработка ответа от сервера
+          console.log(response.data);
+        })
+        .catch(error => {
+          // Обработка ошибок
+          console.error(error);
+        });
+    // };
   };
-
+  // const [student, setStudent] = useState<Student | null>(selectedStudent);
   return (
     <div>
     <div className="Login-div">
@@ -275,18 +289,54 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         {selectedStudent && (
       <div className="student-info">
         <h2>Информация о студенте</h2>
-          <p>Имя: {selectedStudent.first_name}</p>
-          <p>Фамилия: {selectedStudent.last_name}</p>
-          <p>Email: {selectedStudent.email}</p>
-          <p>Пол: {selectedStudent.gender}</p>
-          <p>Страна: {selectedStudent.country_name}</p>
-          <p>Phone: {selectedStudent.phone}</p>
-          <p>День рождения: {selectedStudent.birth_date}</p>
-          <p>Имя пользователя: {selectedStudent.username}</p>
-          <p>Пароль: {selectedStudent.password}</p>
-        <button className="btn" onClick={() => handleDeleteStudent(selectedStudent.student_id)}>Удалить</button>
-        <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
-        <button className="btn" onClick={() => handleCloseEditForm()}>Закрыть</button>
+        <div className="student-update">
+        <label>
+          Имя:
+          <input type="text" value={selectedStudent.first_name} onChange={e => setSelectedStudent({...selectedStudent, first_name: e.target.value})} />
+        </label>
+        <label>
+          Фамилия:
+          <input type="text" value={selectedStudent.last_name} onChange={e => setSelectedStudent({...selectedStudent, last_name: e.target.value})} />
+        </label>
+        <label>
+          Email:
+          <input type="email" value={selectedStudent.email} onChange={e => setSelectedStudent({...selectedStudent, email: e.target.value})} />
+        </label>
+        <label>
+          Пол:
+          <select value={selectedStudent.gender} onChange={e => setSelectedStudent({...selectedStudent, gender: e.target.value})}>
+            <option value="M">Мужской</option>
+            <option value="F">Женский</option>
+          </select>
+        </label>
+        <label>
+          Страна:
+          <input type="text" value={selectedStudent.country_name} onChange={e => setSelectedStudent({...selectedStudent, country_name: e.target.value})} />
+        </label>
+        <label>
+          Телефон:
+          <input type="tel" value={selectedStudent.phone} onChange={e => setSelectedStudent({...selectedStudent, phone: e.target.value})} />
+        </label>
+        <label>
+          Дата рождения:
+          <input type="date" value={selectedStudent.birth_date} onChange={e => setSelectedStudent({...selectedStudent, birth_date: e.target.value})} />
+        </label>
+        <label>
+          Имя пользователя:
+          <input type="text" value={selectedStudent.username} onChange={e => setSelectedStudent({...selectedStudent, username: e.target.value})} />
+        </label>
+        <label>
+          Пароль:
+          <input type="password" value={selectedStudent.password} onChange={e => setSelectedStudent({...selectedStudent, password: e.target.value})} />
+        </label>
+        </div>
+        
+        <div>
+          <button className="btn" onClick={() => handleDeleteStudent(selectedStudent.student_id)}>Удалить</button>
+          <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
+          <button className="btn" onClick={() => handleCloseEditForm()}>Закрыть</button>
+        </div>
+        
       </div>
     )}
     </div>

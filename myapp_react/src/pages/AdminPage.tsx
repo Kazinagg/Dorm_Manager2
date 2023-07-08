@@ -64,31 +64,33 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   };
   
 // pages/AdminPage.tsx
-  const handleAddStudent = () => {
-    const csrftoken = getCookie('csrftoken'); // Получаем CSRF токен
-  
-    axios.post('/api/data/addStudent/', newStudent, {
-      headers: {
-        'X-CSRFToken': csrftoken // Добавляем CSRF токен в заголовки запроса
-      }
-    })
-    .then(response => {
-      setRows([...rows, response.data]);
-      setNewStudent({
-        student_id: 0,
-        first_name: '',
-        last_name: '',
-        birth_date: '',
-        gender: '',
-        country_id: 0,
-        country_name: '',
-        phone: '',
-        username: '',
-        password: '',
-        email: '',
-      });
+const handleAddStudent = () => {
+  const csrftoken = getCookie('csrftoken'); // Получаем CSRF токен
+
+  axios.post('/api/data/addStudent/', newStudent, {
+    headers: {
+      'X-CSRFToken': csrftoken // Добавляем CSRF токен в заголовки запроса
+    }
+  })
+  .then(response => {
+    // Добавляем нового студента в состояние rows
+    // setRows([...rows, response.data]);
+    setShowForm(!showForm)
+    setNewStudent({
+      student_id: 0,
+      first_name: '',
+      last_name: '',
+      birth_date: '',
+      gender: '',
+      country_id: 0,
+      country_name: '',
+      phone: '',
+      username: '',
+      password: '',
+      email: '',
     });
-  };
+  });
+};
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -185,24 +187,26 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   };
 
   const handleDeleteStudent = (studentId: number) => {
-    // Здесь должен быть ваш код для удаления студента
-  };
-  // if (selectedStudent) {
-    // const [student, setStudent] = useState<Student>(selectedStudent);
-  
-    const handleUpdateStudent = (student: Student) => {
-      // Здесь должен быть ваш код для обновления данных студента
-      // Например, отправка запроса PUT на сервер с обновленными данными студента
-      axios.post('/api/data/updateStudent/' + student.student_id + '/', student)
-        .then(response => {
-          // Обработка ответа от сервера
-          console.log(response.data);
+    axios.post('/api/data/deleteStudent/' + studentId + '/')
+        .then(res => {
+            console.log(res.data);
+            // Обновляем состояние rows, удаляя студента с указанным ID
+            setRows(rows.filter(student => student.student_id !== studentId));
+            setSelectedStudent(null);
         })
-        .catch(error => {
-          // Обработка ошибок
-          console.error(error);
-        });
-    // };
+        .catch(error => console.error(error));
+  };
+
+  const handleUpdateStudent = (student: Student) => {
+      axios.post('/api/data/updateStudent/' + student.student_id + '/', student)
+          .then(response => {
+              console.log(response.data);
+              // Обновляем состояние rows, заменяя обновленного студента
+              setRows(rows.map(row => row.student_id === student.student_id ? student : row));
+          })
+          .catch(error => {
+            console.error(error);
+          });
   };
   // const [student, setStudent] = useState<Student | null>(selectedStudent);
   return (

@@ -57,10 +57,10 @@ def change_password(request, studentId):
     student.save()
     return HttpResponse(status=200)
 
-def delete_student(request, studentId):
-    student = get_object_or_404(student_info, student_id=studentId)
-    student.delete()
-    return HttpResponse(status=200)
+# def delete_student(request, studentId):
+#     student = get_object_or_404(student_info, student_id=studentId)
+#     student.delete()
+#     return HttpResponse(status=200)
 
 
 
@@ -122,8 +122,15 @@ def update_ollStudents(request, student_id):
         })
     else:
         return HttpResponseNotAllowed(['POST'])
-    # else:
-    #     return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+
+def delete_student(request, student_id):
+    try:
+        student = Students.objects.get(student_id=student_id)
+        student.delete()
+        return JsonResponse({'message': 'Student was deleted successfully!'}, status=200)
+    except Students.DoesNotExist:
+        return JsonResponse({'error': 'Student not found!'}, status=404)
 
 def add_ollStudents(request):
     if request.method == 'POST':

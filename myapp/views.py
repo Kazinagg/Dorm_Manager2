@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from django.http import JsonResponse
-from .models import student_country_view, users_admins_view, student_info, Users, Countries
+from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse
+from .models import student_country_view, users_admins_view, student_info, Users, Countries, Students
 from django.db import connection
 import json
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+# from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from .models import student_info, Users
 
@@ -57,10 +57,10 @@ def change_password(request, studentId):
     student.save()
     return HttpResponse(status=200)
 
-def delete_student(request, studentId):
-    student = get_object_or_404(student_info, student_id=studentId)
-    student.delete()
-    return HttpResponse(status=200)
+# def delete_student(request, studentId):
+#     student = get_object_or_404(student_info, student_id=studentId)
+#     student.delete()
+#     return HttpResponse(status=200)
 
 
 
@@ -91,6 +91,46 @@ def get_ollStudents(request):
     students = student_info.objects.all().values()  # получаем все объекты Student
     students_list = list(students)  # преобразуем QuerySet в список словарей
     return JsonResponse(students_list, safe=False)
+
+# @csrf_exempt
+def update_ollStudents(request, student_id):
+    if request.method == 'POST':
+        # Получение данных студента из тела запроса
+        data = json.loads(request.body)
+        # Получение объекта студента из базы данных
+        student = Students.objects.get(pk=student_id)
+        # Обновление данных студента
+        student.first_name = data.get('first_name', student.first_name)
+        student.last_name = data.get('last_name', student.last_name)
+        student.birth_date = data.get('birth_date', student.birth_date)
+        student.gender = data.get('gender', student.gender)
+        student.country_id = data.get('country_id', student.country_id)
+        student.phone = data.get('phone', student.phone)
+        student.email = data.get('email', student.email)
+        # Сохранение изменений в базе данных
+        student.save()
+        # Возвращение обновленных данных студента в ответе
+        return JsonResponse({
+            'student_id': student.student_id,
+            'first_name': student.first_name,
+            'last_name': student.last_name,
+            'birth_date': student.birth_date,
+            'gender': student.gender,
+            'country_id': student.country_id,
+            'phone': student.phone,
+            'email': student.email,
+        })
+    else:
+        return HttpResponseNotAllowed(['POST'])
+    
+
+def delete_student(request, student_id):
+    try:
+        student = Students.objects.get(student_id=student_id)
+        student.delete()
+        return JsonResponse({'message': 'Student was deleted successfully!'}, status=200)
+    except Students.DoesNotExist:
+        return JsonResponse({'error': 'Student not found!'}, status=404)
 
 def add_ollStudents(request):
     if request.method == 'POST':

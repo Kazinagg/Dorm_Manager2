@@ -28,6 +28,8 @@ urlpatterns = [
     path('api/data/', views.get_students),
     path('api/data/ollStudent/', views.get_ollStudents),
     path('api/data/addStudent/', views.add_ollStudents),
+    path('api/data/updateStudent/<int:student_id>/', views.update_ollStudents),
+    path('api/data/deleteStudent/<int:student_id>/', views.delete_student, name='delete_student'),
     path('api/auth/admin/', views.get_admin),
     path('api/auth/user/', views.get_users),
     path('api/countries/', views.get_countries),

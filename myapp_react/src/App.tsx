@@ -65,6 +65,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+        
         <motion.div 
           style={{position: 'fixed', maxWidth: '15%', background: '#1f2932', height: '100%'}}
           initial="closed"
@@ -72,6 +73,7 @@ const App: React.FC = () => {
           variants={navVariants}
           transition={{ duration: 0.8 }}
         >
+          <div style={{height: '100px'}}>
           {isHovered ? (
             <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}><motion.img 
             key="open"
@@ -94,6 +96,8 @@ const App: React.FC = () => {
               exit={{ opacity: 0 }}
             />
           )}
+          </div>
+          
 
 
         <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Home</Link> <br/>

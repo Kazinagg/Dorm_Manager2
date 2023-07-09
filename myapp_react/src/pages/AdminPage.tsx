@@ -32,8 +32,11 @@ interface AdminPageProps {
 
 const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'first_name', direction: 'ascending' });
+  // const [student, setStudent] = useState<Student>(selectedStudent);
   const [rows, setRows] = useState<Student[]>([]);
   const navigate = useNavigate();
+  // const [students, setStudents] = useState<Student[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   //const [newStudent, setNewStudent] = useState({});
   const [countries, setCountries] = useState<Countries[]>([]);
   const [newStudent, setNewStudent] = useState<Student>({
@@ -58,33 +61,38 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   };
   
 // pages/AdminPage.tsx
-  const handleAddStudent = () => {
-    const csrftoken = getCookie('csrftoken'); // Получаем CSRF токен
-  
-    axios.post('/api/data/addStudent/', newStudent, {
-      headers: {
-        'X-CSRFToken': csrftoken // Добавляем CSRF токен в заголовки запроса
-      }
-    })
-    .then(response => {
-      setRows([...rows, response.data]);
-      setNewStudent({
-        student_id: 0,
-        first_name: '',
-        last_name: '',
-        birth_date: '',
-        gender: '',
-        country_id: 0,
-        phone: '',
-        username: '',
-        password: '',
-        email: '',
-      });
+const handleAddStudent = () => {
+  const csrftoken = getCookie('csrftoken'); // Получаем CSRF токен
+
+  axios.post('/api/data/addStudent/', newStudent, {
+    headers: {
+      'X-CSRFToken': csrftoken // Добавляем CSRF токен в заголовки запроса
+    }
+  })
+  .then(response => {
+    // Добавляем нового студента в состояние rows
+    // setRows([...rows, response.data]);
+    setShowForm(!showForm)
+    setNewStudent({
+      student_id: 0,
+      first_name: '',
+      last_name: '',
+      birth_date: '',
+      gender: '',
+      country_id: 0,
+      country_name: '',
+      phone: '',
+      username: '',
+      password: '',
+      email: '',
     });
-  };
-  
-  const handleEditStudent = (studentId: number) => {
-    navigate(`/edit/${studentId}`);
+  });
+};
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   };
   function getCookie(name: string): string | null {
     let cookieValue = null;
@@ -155,6 +163,37 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     navigate('/');
   }
 
+  const handleSelectStudent = (student: Student) => {
+    setSelectedStudent(student);
+  };
+
+  const handleCloseEditForm = () => {
+    setSelectedStudent(null);
+  };
+
+  const handleDeleteStudent = (studentId: number) => {
+    axios.post('/api/data/deleteStudent/' + studentId + '/')
+        .then(res => {
+            console.log(res.data);
+            // Обновляем состояние rows, удаляя студента с указанным ID
+            setRows(rows.filter(student => student.student_id !== studentId));
+            setSelectedStudent(null);
+        })
+        .catch(error => console.error(error));
+  };
+
+  const handleUpdateStudent = (student: Student) => {
+      axios.post('/api/data/updateStudent/' + student.student_id + '/', student)
+          .then(response => {
+              console.log(response.data);
+              // Обновляем состояние rows, заменяя обновленного студента
+              setRows(rows.map(row => row.student_id === student.student_id ? student : row));
+          })
+          .catch(error => {
+            console.error(error);
+          });
+  };
+  // const [student, setStudent] = useState<Student | null>(selectedStudent);
   return (
     <div>
       {/* <h1>Страница администратора</h1> */}
@@ -235,6 +274,58 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   <p>Loading...</p>
 )}
         </table>
+
+        {selectedStudent && (
+      <div className="student-info">
+        <h2>Информация о студенте</h2>
+        <div className="student-update">
+        <label>
+          Имя:
+          <input type="text" value={selectedStudent.first_name} onChange={e => setSelectedStudent({...selectedStudent, first_name: e.target.value})} />
+        </label>
+        <label>
+          Фамилия:
+          <input type="text" value={selectedStudent.last_name} onChange={e => setSelectedStudent({...selectedStudent, last_name: e.target.value})} />
+        </label>
+        <label>
+          Email:
+          <input type="email" value={selectedStudent.email} onChange={e => setSelectedStudent({...selectedStudent, email: e.target.value})} />
+        </label>
+        <label>
+          Пол:
+          <select value={selectedStudent.gender} onChange={e => setSelectedStudent({...selectedStudent, gender: e.target.value})}>
+            <option value="M">Мужской</option>
+            <option value="F">Женский</option>
+          </select>
+        </label>
+        <label>
+          Страна:
+          <input type="text" value={selectedStudent.country_name} onChange={e => setSelectedStudent({...selectedStudent, country_name: e.target.value})} />
+        </label>
+        <label>
+          Телефон:
+          <input type="tel" value={selectedStudent.phone} onChange={e => setSelectedStudent({...selectedStudent, phone: e.target.value})} />
+        </label>
+        <label>
+          Дата рождения:
+          <input type="date" value={selectedStudent.birth_date} onChange={e => setSelectedStudent({...selectedStudent, birth_date: e.target.value})} />
+        </label>
+        <label>
+          Имя пользователя:
+          <input type="text" value={selectedStudent.username} onChange={e => setSelectedStudent({...selectedStudent, username: e.target.value})} />
+        </label>
+        <label>
+          Пароль:
+          <input type="password" value={selectedStudent.password} onChange={e => setSelectedStudent({...selectedStudent, password: e.target.value})} />
+        </label>
+        </div>
+        
+        <div>
+          <button className="btn" onClick={() => handleDeleteStudent(selectedStudent.student_id)}>Удалить</button>
+          <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
+          <button className="btn" onClick={() => handleCloseEditForm()}>Закрыть</button>
+        </div>
+        
       </div>
     </div>
     </div>

@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/static/css/main.7eb5ca6e.css",
-    "main.js": "/static/js/main.71126420.js",
+    "main.js": "/static/js/main.71dd200d.js",
     "static/media/logo.png": "/static/media/logo.5a2f07aaf8c1ef4cfc04.png",
     "static/media/Holl.jpg": "/static/media/Holl.bb57d938eec32696b639.jpg",
     "static/media/UpMoney.jpg": "/static/media/UpMoney.cbc7de0a0f691a0a3261.jpg",
     "static/media/OnlineCoursesImage.jpg": "/static/media/OnlineCoursesImage.9977397635c8751366d7.jpg",
     "index.html": "/index.html",
     "main.7eb5ca6e.css.map": "/static/css/main.7eb5ca6e.css.map",
-    "main.71126420.js.map": "/static/js/main.71126420.js.map"
+    "main.71dd200d.js.map": "/static/js/main.71dd200d.js.map"
   },
   "entrypoints": [
     "static/css/main.7eb5ca6e.css",
-    "static/js/main.71126420.js"
+    "static/js/main.71dd200d.js"
   ]
 }

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HomePage.css';
-import './AdminPage.css';
 import { useNavigate } from 'react-router-dom';
 
 type Student = {
@@ -11,7 +10,6 @@ type Student = {
   last_name: string;
   birth_date: string;
   gender: string;
-  country_name: string;
   country_id: number;
   phone: string;
   username: string;
@@ -48,7 +46,6 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     birth_date: '',
     gender: '',
     country_id: 0,
-    country_name: '',
     phone: '',
     username: '',
     password: '',
@@ -97,18 +94,6 @@ const handleAddStudent = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
-
-  const filteredRows = rows.filter(
-    (row) =>
-      row.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.country_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.email.toLowerCase().includes(searchTerm.toLowerCase())
-      // добавьте здесь другие поля, по которым вы хотите фильтровать
-  );
-    
   function getCookie(name: string): string | null {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -123,7 +108,7 @@ const handleAddStudent = () => {
     }
     return cookieValue;
   }
-
+  
   
 
   useEffect(() => {
@@ -211,21 +196,26 @@ const handleAddStudent = () => {
   // const [student, setStudent] = useState<Student | null>(selectedStudent);
   return (
     <div>
-    <div className="Login-div">
-      <button className="btn" onClick={buttonOnLogout}>Logout</button>
-    </div>
-    <div className="home-page">
-      <h1 className="home-page__title">Страница администратора</h1>
-      <p className="home-page__info">
-        Жители этого общажного ада.
-      </p>
-      <button className="btn" onClick={() => setShowForm(!showForm)}>Добавить нового студента</button>
-      {showForm && (
-      <div className="add-student-form">
-        <button className="btn close-btn" onClick={() => setShowForm(!showForm)}>
-          X
-        </button>
-        <h2>Добавить нового студента</h2>
+      {/* <h1>Страница администратора</h1> */}
+      <div>
+      <div className="Login-div">
+        <button className="login-button" onClick={buttonOnLogout}>Logout</button>
+      </div>
+      <div className="home-page">
+        <h1 className="home-page__title">Страница администратора</h1>
+        <p className="home-page__info">
+          Жители этого общажного ада.
+        </p>
+        <button className="login-button" onClick={() => setShowForm(!showForm)}>Добавить нового студента</button>
+        {showForm && (
+        <div className="add-student-form">
+        
+        
+        {/* <div > */}
+          <button className="login-button" onClick={() => setShowForm(!showForm)}>
+            Скрыть форму 
+          </button>
+          <h2>Добавить нового студента</h2>
           <input name="first_name" value={newStudent.first_name} onChange={handleInputChange} placeholder="Имя" />
           <input name="last_name" value={newStudent.last_name} onChange={handleInputChange} placeholder="Фамилия" />
           <input type="date" name="birth_date" value={newStudent.birth_date} onChange={handleInputChange} placeholder="День рождения" />
@@ -237,57 +227,52 @@ const handleAddStudent = () => {
           </select>
           <input name="phone" value={newStudent.phone} onChange={handleInputChange} placeholder="Телефон" />
       <input name="email" value={newStudent.email} onChange={handleInputChange} placeholder="Email" />
-      {/* <button onClick={handleAddStudent}>Добавить студента</button> */}
-      <button className="btn" onClick={handleAddStudent}>Добавить студента</button>
-      </div>
-      )}
+      <button onClick={handleAddStudent}>Добавить студента</button>
+        </div>
+        )}
         {/* </div> */}
-        <input
-            type="text"
-            placeholder="Поиск"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            style={{
-                padding: "12px 20px",
-                margin: "8px 0",
-                boxSizing: "border-box",
-                border: "2px solid #ccc",
-                borderRadius: "4px"
-            }}
-        />
+        
         <table>
           <thead>
           <tr>
             <th onClick={() => requestSort('first_name')}>Имя</th>
             <th onClick={() => requestSort('last_name')}>Фамилия</th>
-            {/* <th onClick={() => requestSort('birth_date')}>День рождения</th> */}
+            <th onClick={() => requestSort('birth_date')}>День рождения</th>
             <th onClick={() => requestSort('email')}>Email</th>
             <th onClick={() => requestSort('gender')}>Пол</th>
-            <th onClick={() => requestSort('country_name')}>Страна</th>
-            {/* <th onClick={() => requestSort('username')}>Логин</th> */}
-            {/* <th onClick={() => requestSort('password')}>Пароль</th> */}
+            <th onClick={() => requestSort('country_id')}>Страна</th>
+            <th onClick={() => requestSort('username')}>Логин</th>
+            <th onClick={() => requestSort('password')}>Пароль</th>
             <th onClick={() => requestSort('phone')}>Phone</th>
           </tr>
           </thead>
-          <tbody>
-            {filteredRows.map((row, index) => (
-              <tr key={index}>
-                <td>{row.first_name}</td>
-                <td>{row.last_name}</td>
-                {/* <td>{row.birth_date}</td> */}
-                <td>{row.email}</td>
-                <td>{row.gender}</td>
-                <td>{row.country_name}</td>
-                {/* <td>{row.username}</td> */}
-                {/* <td>{row.password}</td> */}
-                <td>{row.phone}</td>
-                <td>
-                  <button className="btn" onClick={() => handleSelectStudent(row)}>Показать</button>
-                </td>
-
-              </tr>
-            ))}
-          </tbody>
+          {rows.length > 0 && countries.length > 0 ? (
+  <tbody>
+    {rows.map((row, index) => {
+      const country = countries.find(c => Number(c.country_id) === Number( row.country_id));
+      console.log(countries);
+      console.log("countries");
+      console.log(rows);
+      console.log("row");
+      return (
+        <tr key={index}>
+          <td>{row.first_name}</td>
+          <td>{row.last_name}</td>
+          <td>{row.birth_date}</td>
+          <td>{row.email}</td>
+          <td>{row.gender}</td>
+          <td>{country ? country.country_name : 'Неизвестно'}</td>
+          <td>{row.username}</td>
+          <td>{row.password}</td>
+          <td>{row.phone}</td>
+          <td>изменить "вьеби кнопку"</td>
+        </tr>
+      );
+    })}
+  </tbody>
+) : (
+  <p>Loading...</p>
+)}
         </table>
 
         {selectedStudent && (
@@ -342,9 +327,8 @@ const handleAddStudent = () => {
         </div>
         
       </div>
-    )}
     </div>
-  </div>
+    </div>
   );
 };
 

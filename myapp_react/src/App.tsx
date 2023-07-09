@@ -8,7 +8,7 @@ import HomePage from './pages/HomePage';
 import StudentsPage from './pages/StudentsPage';
 import logo from './images/logo.png';
 import logo_min from './images/logo_min.png';
-
+import NewsFeed from "./pages/NewsFeed";
 const App: React.FC = () => {
   const [isLoggedInAdmin, setIsLoggedInAdmin] = useState(false);
   const [isLoggedInUser, setIsLoggedInUser] = useState(false);
@@ -84,7 +84,7 @@ const App: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           /></Link>
-           
+          
           ) : (
             <motion.img 
               key="closed"
@@ -101,7 +101,7 @@ const App: React.FC = () => {
 
 
         <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Home</Link> <br/>
-        <Link to="/students" style={{ color: '#fff', textDecoration: 'none' }}>дибылы</Link><br/>
+        <Link to="/students" style={{ color: '#fff', textDecoration: 'none' }}>Список проживающих студентов</Link><br/>
         
         {!isLoggedInAdmin && !isLoggedInUser && (
           <div>
@@ -137,11 +137,12 @@ const App: React.FC = () => {
         )}
       </Routes>
 
-
+          
     </Router>
     
   );
 };
+
 
 export default App;
 

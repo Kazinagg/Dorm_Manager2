@@ -7,23 +7,12 @@ from django.shortcuts import render
 # from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from .models import student_info, Users
+from django.forms.models import model_to_dict
 
 def get_student(request, user_id):
-    student = get_object_or_404(student_info, user_id=user_id)
-    student_data = {
-        'student_id': student.student_id,
-        'user_id': student.user_id,
-        'first_name': student.first_name,
-        'last_name': student.last_name,
-        'birth_date': student.birth_date,
-        'gender': student.gender,
-        'country_name': student.country_name,
-        'phone': student.phone,
-        'username': student.username,
-        'password': student.password,
-        'email': student.email,
-    }
-    return JsonResponse(student_data)
+    student = model_to_dict(student_info.objects.get(user_id=user_id))
+
+    return JsonResponse(student)
 
 def update_student(request, studentId):
     student = get_object_or_404(student_info, student_id=studentId)
@@ -51,16 +40,74 @@ def update_student(request, studentId):
     }
     return JsonResponse(student_data)
 
-def change_password(request, studentId):
-    student = get_object_or_404(student_info, student_id=studentId)
-    student.password = request.POST.get('password')
-    student.save()
-    return HttpResponse(status=200)
-
-# def delete_student(request, studentId):
+# def change_password(request, studentId):
 #     student = get_object_or_404(student_info, student_id=studentId)
-#     student.delete()
+#     student.password = request.POST.get('password')
+#     student.save()
 #     return HttpResponse(status=200)
+
+
+# def change_password(request, user_id):
+#   if request.method == 'POST':
+#     data = json.loads(request.body)
+#     password = data.get('password')
+#     try:
+#       user = Users.objects.get(user_id=user_id)
+#       user.password = password
+#       user.save()
+#       return JsonResponse({'message': 'Password changed successfully'}, status=200)
+#     except Users.DoesNotExist:
+#       return JsonResponse({'message': 'User not found'}, status=404)
+#   else:
+#     return JsonResponse({'message': 'Invalid request method'}, status=405)
+
+# Save user view
+def save_user(request):
+    data = json.loads(request.body)
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT update_student_info(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+                       [data['student_id'], data['first_name'], data['last_name'], data['birth_date'], data['gender'], data['country_id'], data['phone'], data['username'], data['password'], data['email']])
+        return HttpResponse('OK')
+# def save_user(request, user_id):
+#   if request.method == 'PUT':
+#     data = json.loads(request.body)
+#     user = data.get('user')
+#     try:
+#       student = Students.objects.get(user_id=user_id)
+#       student.first_name = user.get('first_name')
+#       student.last_name = user.get('last_name')
+#       student.birth_date = user.get('birth_date')
+#       student.gender = user.get('gender')
+#       student.country_id = user.get('country_id')
+#       student.phone = user.get('phone')
+#       student.email = user.get('email')
+#       student.save()
+#       return JsonResponse({'message': 'User saved successfully'}, status=200)
+#     except Students.DoesNotExist:
+#       return JsonResponse({'message': 'Student not found'}, status=404)
+#   else:
+#     return JsonResponse({'message': 'Invalid request method'}, status=405)
+
+# Cancel edit view
+
+def cancel_edit(request, user_id):
+  if request.method == 'GET':
+    try:
+      student = Students.objects.get(user_id=user_id)
+      user = {
+        'first_name': student.first_name,
+        'last_name': student.last_name,
+        'birth_date': student.birth_date,
+        'gender': student.gender,
+        'country_id': student.country_id,
+        'phone': student.phone,
+        'email': student.email,
+      }
+      return JsonResponse(user, status=200)
+    except Students.DoesNotExist:
+      return JsonResponse({'message': 'Student not found'}, status=404)
+  else:
+    return JsonResponse({'message': 'Invalid request method'}, status=405)
 
 
 

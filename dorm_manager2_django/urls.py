@@ -33,10 +33,13 @@ urlpatterns = [
     path('api/auth/admin/', views.get_admin),
     path('api/auth/user/', views.get_users),
     path('api/countries/', views.get_countries),
+    # path('api/users/<int:user_id>/change-password', views.change_password, name='change_password'),
+    path('api/users/', views.save_user, name='save_user'),
+    # path('api/users/get/<int:user_id>', views.cancel_edit, name='cancel_edit'),
 
     path('api/users/get/<int:user_id>', views.get_student, name='get_student'),
     # path('api/users/<int:studentId>', views.update_student, name='update_student'),
-    path('api/usersint/<int:studentId>/change-password', views.change_password, name='change_password'),
+    # path('api/usersint/<int:studentId>/change-password', views.change_password, name='change_password'),
     # path('api/users/<int:studentId>', views.delete_student, name='delete_student'),
 
     re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),

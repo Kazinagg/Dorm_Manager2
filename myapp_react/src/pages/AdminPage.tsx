@@ -346,20 +346,6 @@ const handleAddStudent = () => {
           <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
           <button className="btn" onClick={() => handleCloseEditForm()}>Закрыть</button>
         </div>
-        
-
-          <p>Имя: {selectedStudent.first_name}</p>
-          <p>Фамилия: {selectedStudent.last_name}</p>
-          <p>Email: {selectedStudent.email}</p>
-          <p>Пол: {selectedStudent.gender}</p>
-          <p>Страна: {selectedStudent.country_name}</p>
-          <p>Phone: {selectedStudent.phone}</p>
-          <p>День рождения: {selectedStudent.birth_date}</p>
-          <p>Имя пользователя: {selectedStudent.username}</p>
-          <p>Пароль: {selectedStudent.password}</p>
-        <button className="btn" onClick={() => handleDeleteStudent(selectedStudent.student_id)}>Удалить</button>
-        <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
-        <button className="btn" onClick={() => handleCloseEditForm()}>Закрыть</button>
 
       </div>
     )}

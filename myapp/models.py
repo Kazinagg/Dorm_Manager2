@@ -1,5 +1,6 @@
 # models.py
 from django.db import models
+# from django.db.models import F
 
 class student_country_view(models.Model):
     student_id = models.IntegerField(primary_key=True)
@@ -44,6 +45,22 @@ class student_info(models.Model):
         db_table = 'student_info'
 
 
+class UserResidenceInfo(models.Model):
+    user_id = models.IntegerField(primary_key=True)
+    username = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    room_number = models.IntegerField()
+    move_in_date = models.DateField()
+    move_out_date = models.DateField()
+    total_cost = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        managed = False
+        db_table = 'user_residence_info'
+
+
 class Admins(models.Model):
     admin_id = models.AutoField(primary_key=True)
     user = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
@@ -68,10 +85,15 @@ class Residence(models.Model):
     room = models.ForeignKey('Rooms', models.DO_NOTHING, blank=True, null=True)
     move_in_date = models.DateField(blank=True, null=True)
     move_out_date = models.DateField(blank=True, null=True)
+    @property
+    def total_cost(self):
+        return self.room.cost * (self.move_out_date - self.move_in_date).days
 
     class Meta:
         managed = False
         db_table = 'residence'
+
+
 
 
 class Rooms(models.Model):
@@ -110,6 +132,15 @@ class Users(models.Model):
     class Meta:
         managed = False
         db_table = 'users'
+
+# residences = Residence.objects.select_related('student__user', 'room').annotate(
+#     username=F('student__user__username'),
+#     password=F('student__user__password'),
+#     first_name=F('student__first_name'),
+#     last_name=F('student__last_name'),
+#     room_number=F('room__room_number'),
+#     total_cost=F('total_cost')
+# )
 
 
 

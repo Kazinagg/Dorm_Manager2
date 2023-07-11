@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse
-from .models import student_country_view, users_admins_view, student_info, Users, Countries, Students
+from .models import student_country_view, users_admins_view, student_info, Users, Countries, Students, UserResidenceInfo
 from django.db import connection
 import json
 from django.shortcuts import render
@@ -8,6 +8,41 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from .models import student_info, Users
 from django.forms.models import model_to_dict
+# from django.views import View
+# from .models import Residence
+# from .serializers import ResidenceSerializer
+
+
+def get_UserResidenceInfo(request):
+    students = UserResidenceInfo.objects.all().values()  # получаем все объекты Student
+    students_list = list(students)  # преобразуем QuerySet в список словарей
+    return JsonResponse(students_list, safe=False)
+
+
+# class UserResidenceInfoView(View):
+#     def get(self, request):
+#         residences = Residence.objects.all()
+#         serializer = ResidenceSerializer(residences, many=True)
+#         return JsonResponse(serializer.data, safe=False)
+
+#     def post(self, request):
+#         serializer = ResidenceSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return JsonResponse(serializer.data, status=201)
+#         return JsonResponse(serializer.errors, status=400)
+
+# class UserResidenceInfoDetailView(View):
+#     def put(self, request, pk):
+#         residence = Residence.objects.get(pk=pk)
+#         serializer = ResidenceSerializer(residence, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return JsonResponse(serializer.data)
+#         return JsonResponse(serializer.errors, status=400)
+
+
+
 
 def get_student(request, user_id):
     student = model_to_dict(student_info.objects.get(user_id=user_id))

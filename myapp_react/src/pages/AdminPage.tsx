@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 type Student = {
   student_id: number;
+  user_id: number;
   first_name: string;
   last_name: string;
   birth_date: string;
@@ -22,6 +23,17 @@ type Countries = {
   country_id: number;
   country_name: string;
 };
+type UserResidenceInfo = {
+  user_id: number;
+  username: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  room_number: number;
+  move_in_date: string;
+  move_out_date: string;
+  total_cost: number;
+}
 
 type SortConfig = {
   key: keyof Student;
@@ -36,14 +48,22 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'first_name', direction: 'ascending' });
   // const [student, setStudent] = useState<Student>(selectedStudent);
   const [rows, setRows] = useState<Student[]>([]);
-  const navigate = useNavigate();
-
-  const [students, setStudents] = useState<Student[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  //const [newStudent, setNewStudent] = useState({});
+  const [Residence, setResidence] = useState<UserResidenceInfo[]>([]);
   const [countries, setCountries] = useState<Countries[]>([]);
+
+  const navigate = useNavigate();
+  const [update, setUpdate] = useState<true | false>(false);
+  const [info, setInfo] = useState<true | false>(false);
+
+  // const [students, setStudents] = useState<Student[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [selectedResidence, setSelectedResidence] = useState<UserResidenceInfo[] | null>(null);
+  //const [newStudent, setNewStudent] = useState({});
+  
+  // const [Residence, setResidence] = useState<UserResidenceInfo[]>([]);
   const [newStudent, setNewStudent] = useState<Student>({
     student_id: 0,
+    user_id: 0,
     first_name: '',
     last_name: '',
     birth_date: '',
@@ -80,6 +100,7 @@ const handleAddStudent = () => {
     setShowForm(!showForm)
     setNewStudent({
       student_id: 0,
+      user_id: 0,
       first_name: '',
       last_name: '',
       birth_date: '',
@@ -136,6 +157,12 @@ const handleAddStudent = () => {
         console.log("response.data");
         console.log(response.data);
       });
+    axios.get('/api/data/UserResidenceInfo/')
+      .then(response => {
+        setResidence(response.data);
+        console.log("response.data");
+        console.log(response.data);
+      });
   }, []);
 
   useEffect(() => {
@@ -181,12 +208,30 @@ const handleAddStudent = () => {
     navigate('/');
   }
 
-  const handleSelectStudent = (student: Student) => {
-    setSelectedStudent(student);
+  const handleSelectStudent = (type: boolean, student: Student) => {
+    
+    // UserResidenceInfo
+    
+    
+    if (type){
+      setSelectedStudent(student);
+      setUpdate(true)
+    }else{
+      setSelectedResidence(Residence.filter(residence => residence.user_id === student.user_id));
+      setInfo(true)
+    }
+    // setUpdate(true)
   };
 
-  const handleCloseEditForm = () => {
+  const handleCloseEditForm = (type: boolean) => {
     setSelectedStudent(null);
+    if (type){
+      setSelectedStudent(null);
+      setUpdate(false)
+    }else{
+      setSelectedResidence(null);
+      setInfo(false)
+    }
   };
 
   const handleDeleteStudent = (studentId: number) => {
@@ -287,68 +332,100 @@ const handleAddStudent = () => {
                 {/* <td>{row.password}</td> */}
                 <td>{row.phone}</td>
                 <td>
-                  <button className="btn" onClick={() => handleSelectStudent(row)}>Показать</button>
+                  <button className="btn" onClick={() => handleSelectStudent(true ,row)}>Изменить</button>
+                  <button className="btn" onClick={() => handleSelectStudent(false ,row)}>Доп-инфо</button>
                 </td>
 
               </tr>
             ))}
           </tbody>
         </table>
-
+            
+        {selectedResidence && (
+          <div className="student-info">
+            <table>
+              <thead>
+                <tr>
+                  <th>Имя пользователя</th>
+                  <th>Имя</th>
+                  <th>Фамилия</th>
+                  <th>Номер комнаты</th>
+                  <th>Дата заселения</th>
+                  <th>Дата выселения</th>
+                  <th>Общая стоимость</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedResidence.map((row, index) => (
+                  <tr key={index}>
+                    <td>{row.username}</td>
+                    <td>{row.first_name}</td>
+                    <td>{row.last_name}</td>
+                    <td>{row.room_number}</td>
+                    <td>{row.move_in_date}</td>
+                    <td>{row.move_out_date}</td>
+                    <td>{row.total_cost}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button className="btn" onClick={() => handleCloseEditForm(false)}>Закрыть</button>
+          </div>
+        )}
         {selectedStudent && (
-      <div className="student-info">
-        <h2>Информация о студенте</h2>
+          <div className="student-info">
+            <h2>Информация о студенте</h2>
 
-        <div className="student-update">
-        <label>
-          Имя:
-          <input type="text" value={selectedStudent.first_name} onChange={e => setSelectedStudent({...selectedStudent, first_name: e.target.value})} />
-        </label>
-        <label>
-          Фамилия:
-          <input type="text" value={selectedStudent.last_name} onChange={e => setSelectedStudent({...selectedStudent, last_name: e.target.value})} />
-        </label>
-        <label>
-          Email:
-          <input type="email" value={selectedStudent.email} onChange={e => setSelectedStudent({...selectedStudent, email: e.target.value})} />
-        </label>
-        <label>
-          Пол:
-          <select value={selectedStudent.gender} onChange={e => setSelectedStudent({...selectedStudent, gender: e.target.value})}>
-            <option value="M">Мужской</option>
-            <option value="F">Женский</option>
-          </select>
-        </label>
-        <label>
-          Страна:
-          <input type="text" value={selectedStudent.country_name} onChange={e => setSelectedStudent({...selectedStudent, country_name: e.target.value})} />
-        </label>
-        <label>
-          Телефон:
-          <input type="tel" value={selectedStudent.phone} onChange={e => setSelectedStudent({...selectedStudent, phone: e.target.value})} />
-        </label>
-        <label>
-          Дата рождения:
-          <input type="date" value={selectedStudent.birth_date} onChange={e => setSelectedStudent({...selectedStudent, birth_date: e.target.value})} />
-        </label>
-        <label>
-          Имя пользователя:
-          <input type="text" value={selectedStudent.username} onChange={e => setSelectedStudent({...selectedStudent, username: e.target.value})} />
-        </label>
-        <label>
-          Пароль:
-          <input type="password" value={selectedStudent.password} onChange={e => setSelectedStudent({...selectedStudent, password: e.target.value})} />
-        </label>
-        </div>
+            <div className="student-update">
+              <label>
+                Имя:
+                <input type="text" value={selectedStudent.first_name} onChange={e => setSelectedStudent({...selectedStudent, first_name: e.target.value})} />
+              </label>
+              <label>
+                Фамилия:
+                <input type="text" value={selectedStudent.last_name} onChange={e => setSelectedStudent({...selectedStudent, last_name: e.target.value})} />
+              </label>
+              <label>
+                Email:
+                <input type="email" value={selectedStudent.email} onChange={e => setSelectedStudent({...selectedStudent, email: e.target.value})} />
+              </label>
+              <label>
+                Пол:
+                <select value={selectedStudent.gender} onChange={e => setSelectedStudent({...selectedStudent, gender: e.target.value})}>
+                  <option value="M">Мужской</option>
+                  <option value="F">Женский</option>
+                </select>
+              </label>
+              <label>
+                Страна:
+                <input type="text" value={selectedStudent.country_name} onChange={e => setSelectedStudent({...selectedStudent, country_name: e.target.value})} />
+              </label>
+              <label>
+                Телефон:
+                <input type="tel" value={selectedStudent.phone} onChange={e => setSelectedStudent({...selectedStudent, phone: e.target.value})} />
+              </label>
+              <label>
+                Дата рождения:
+                <input type="date" value={selectedStudent.birth_date} onChange={e => setSelectedStudent({...selectedStudent, birth_date: e.target.value})} />
+              </label>
+              <label>
+                Имя пользователя:
+                <input type="text" value={selectedStudent.username} onChange={e => setSelectedStudent({...selectedStudent, username: e.target.value})} />
+              </label>
+              <label>
+                Пароль:
+                <input type="password" value={selectedStudent.password} onChange={e => setSelectedStudent({...selectedStudent, password: e.target.value})} />
+              </label>
+            </div>
+            
+            <div>
+              <button className="btn" onClick={() => handleDeleteStudent(selectedStudent.student_id)}>Удалить</button>
+              <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
+              <button className="btn" onClick={() => handleCloseEditForm(true)}>Закрыть</button>
+            </div>
+          </div>
+        )}
         
-        <div>
-          <button className="btn" onClick={() => handleDeleteStudent(selectedStudent.student_id)}>Удалить</button>
-          <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
-          <button className="btn" onClick={() => handleCloseEditForm()}>Закрыть</button>
-        </div>
-
-      </div>
-    )}
     </div>
   </div>
   );

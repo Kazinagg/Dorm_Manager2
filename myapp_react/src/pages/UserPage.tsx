@@ -29,11 +29,11 @@ interface UserPageProps {
   onLogout: () => void;
 }
 
-interface SelectProps<T = any> {
-  value?: T;
-  onChange?: (value: T) => void;
-  // другие свойства
-}
+// interface SelectProps<T = any> {
+//   value?: T;
+//   onChange?: (value: T) => void;
+//   // другие свойства
+// }
 
 const UserPage: React.FC<UserPageProps> = ({ userId, onLogout }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -43,23 +43,32 @@ const UserPage: React.FC<UserPageProps> = ({ userId, onLogout }) => {
   const [countries, setCountries] = useState<Countries[]>([]);
 
   useEffect(() => {
-    axios.get(`/api/users/get/${userId}`)
-      .then(response => {
-        setUser(response.data)
-        console.log(response);
-      });
-    
+    let countriesData: Countries[] = [];
+    let userData: User | null = null;
+    async function fetchData1() {
+      const response = await axios.get('/api/countries/');
+      setCountries(response.data);
+      countriesData = response.data;
+    }
+    async function fetchData2() {
+      const response = await axios.get(`/api/users/get/${userId}`);
+      setUser(response.data);
+      userData = response.data;
+    }
+    Promise.all([fetchData1(), fetchData2()]).then(() => {
+      setUser((prevUser) => ({ ...prevUser!, ['country_id']: countriesData.find(country => country.country_name === userData?.country_name)?.country_id || 0 }));
+    });
   }, [userId]);
 
-  useEffect(() => {
-    axios.get('/api/countries/')
-      .then(response => {
-        setCountries(response.data);
-      })
-      .catch(error => {
-        console.error('There was an!', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios.get('/api/countries/')
+  //     .then(response => {
+  //       setCountries(response.data);
+  //     })
+  //     .catch(error => {
+  //       console.error('There was an!', error);
+  //     });
+  // }, []);
 
   // const handleChangePassword = () => {
   //   axios.post(`/api/users/${userId}/change-password`, { password: newPassword }, {
@@ -88,10 +97,14 @@ const UserPage: React.FC<UserPageProps> = ({ userId, onLogout }) => {
 
   const handleCancel = () => { 
     setEditMode(false); 
-    setNewPassword(''); 
-    axios.get(`/api/users/get/${userId}`) .then(response => { 
-      setUser(response.data) 
-      console.log(response); 
+    let userData: User | null = null;
+    async function fetchData2() {
+      const response = await axios.get(`/api/users/get/${userId}`);
+      setUser(response.data);
+      userData = response.data;
+    }
+    Promise.all([fetchData2()]).then(() => {
+      setUser((prevUser) => ({ ...prevUser!, ['country_id']: countries.find(country => country.country_name === userData?.country_name)?.country_id || 0 }));
     });
   };
 
@@ -106,8 +119,13 @@ const UserPage: React.FC<UserPageProps> = ({ userId, onLogout }) => {
   // const handleSelectChange1 = (value:{ value: number, label: string }, name: string) => {
   //   setUser((prevUser) => ({ ...prevUser!, [name]: value.value }));
   // };
-  const handleSelectChange1 = (value: number, name: string) => {
-    setUser((prevUser) => ({ ...prevUser!, [name]: value }));
+  const handleSelectChange1 = (country_id: number, name: string) => {
+    console.log(country_id);
+    setUser((prevUser) => ({ ...prevUser!, [name]: country_id }));
+    const country = countries.find(country => country.country_id === country_id);
+    if (country) {
+        setUser((prevUser) => ({ ...prevUser!, ['country_name']:  country.country_name}));
+    }
   };
   const handleSelectChange2 = (value: string, name: string) => {
     setUser((prevUser) => ({ ...prevUser!, [name]: value }));
@@ -192,17 +210,16 @@ const UserPage: React.FC<UserPageProps> = ({ userId, onLogout }) => {
                 </Select>
               </Form.Item>
               <Form.Item label="Country">
-                <Select
-                  value={user.country_id}
-                  // {console.log(user.country_id)}
-                  onChange={(value) => handleSelectChange1(value, 'country_id')}
-                >
-                  {countries.map(country => (
-                    <Select.Option key={country.country_id} value={country.country_id}>
-                      {country.country_name}
-                    </Select.Option>
-                  ))}
-                </Select>
+              <Select
+                value={countries.find(country => country.country_name === user.country_name)?.country_id}
+                onChange={(value) => handleSelectChange1(value, 'country_id')}
+              >
+                {countries.map(country => (
+                  <Select.Option key={country.country_id} value={country.country_id}>
+                    {country.country_name}
+                  </Select.Option>
+                ))}
+              </Select>
               </Form.Item>
               <Form.Item label="Phone">
 

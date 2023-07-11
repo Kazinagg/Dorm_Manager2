@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import './HomePage.css';
+import './StudentsPage.css';
 
 
 type Student = {
@@ -66,9 +66,9 @@ const StudentsPage: React.FC = () => {
       {/* <div className="Login-div">
         <Link to="/login" className="login-button">Войти</Link>
       </div> */}
-      <div className="home-page">
-        <h1 className="home-page__title">Добро пожаловать на главную страницу</h1>
-        <p className="home-page__info">
+      <div className="students-page">
+        <h1 className="students-page__title">Добро пожаловать на главную страницу</h1>
+        <p className="students-page__info">
           Жители этого общажного ада.
         </p>
         <table>
@@ -104,6 +104,3 @@ const StudentsPage: React.FC = () => {
 };
 
 export default StudentsPage;
-
-
-

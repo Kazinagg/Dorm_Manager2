@@ -428,10 +428,6 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
                     <td>{row.move_in_date}</td>
                     <td>{row.move_out_date}</td>
                     <td>{row.total_cost}</td>
-                    <td>
-                      <button className="btn" onClick={() => handleDeleteSelectResidence(row)}>Удалить</button>
-                      {/* <button className="btn" onClick={() => handleUpdateSelectResidence(row)}>Изменить</button> */}
-                    </td>
                   </tr>
                 ))}
               </tbody>

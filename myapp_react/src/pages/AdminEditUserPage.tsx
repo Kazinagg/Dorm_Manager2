@@ -25,7 +25,7 @@ const AddResidenceForm = ({ onAddResidence }: AddResidenceFormProps) => {
             try {
                 const response = await axios.get('/api/data/ollStudent/');
                 setStudents(response.data);
-                console.log(response.data);
+                // console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
@@ -52,7 +52,8 @@ const AddResidenceForm = ({ onAddResidence }: AddResidenceFormProps) => {
             student_id: Number(idStudent),
             room_id: roomId,
             move_in_date: moveInDate,
-            move_out_date: moveOutDate
+            move_out_date: moveOutDate,
+            payment: false
         });
         setStudentId(0);
         setRoomId(0);
@@ -150,6 +151,7 @@ type Rooms = {
 
 type Residence = {
     residence_id: number;
+    payment: boolean
     student_id: number;
     room_id: number;
     move_in_date: string;
@@ -257,6 +259,7 @@ const AdminEditUserPage: React.FC = () => {
         try {
             const response = await axios.post('/api/data/addResidence/', residenceData);
             window.location.reload();
+            console.log(residenceData)
             // Обновляем состояние с новой информацией о проживании
             setUserResidenceInfo([...userResidenceInfo, response.data]);
         } catch (error: any) {
@@ -288,7 +291,7 @@ const AdminEditUserPage: React.FC = () => {
             }
             return prevState;
         });
-        
+        console.log(residence_id + '/' + isChecked)
         
         axios.post('/api/data/update/payment/' + residence_id + '/' + isChecked)
             .then(response => {
@@ -349,8 +352,8 @@ const AdminEditUserPage: React.FC = () => {
                                             Общая стоимость: {info.total_cost}<br />
                                         </Typography.Paragraph>
                                         <div className="checkbox-wrapper-26">
-                                            <input type="checkbox" id="_checkbox-26" checked={info.payment} onChange={(event) => handleCheckboxChange(info.residence_id, event)}></input>
-                                            <label htmlFor="_checkbox-26">
+                                            <input type="checkbox" id="_checkbox-26{info.residence_id}" checked={info.payment} onChange={(event) => handleCheckboxChange(info.residence_id, event)}/>
+                                            <label htmlFor="_checkbox-26{info.residence_id}">
                                                 <div className="tick_mark"></div>
                                             </label>
                                         </div>

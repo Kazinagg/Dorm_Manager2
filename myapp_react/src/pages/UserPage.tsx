@@ -270,6 +270,7 @@ const UserPage: React.FC<UserPageProps> = ({ idUser, onLogout }) => {
     const handleAddSelectResidence = async (residenceData: Residence) => {
         try {
             const response = await axios.post('/api/data/addResidence/', residenceData);
+            console.log(residenceData);
             window.location.reload();
             // Обновляем состояние с новой информацией о проживании
             setUserResidenceInfo([...userResidenceInfo, response.data]);

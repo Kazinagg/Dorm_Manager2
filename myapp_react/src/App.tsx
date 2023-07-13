@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import AdminPage from './pages/AdminPage';
 import UserPage from './pages/UserPage';
@@ -14,6 +15,7 @@ const App: React.FC = () => {
   const [isLoggedInAdmin, setIsLoggedInAdmin] = useState(false);
   const [isLoggedInUser, setIsLoggedInUser] = useState(false);
   const [id, setId] = useState<number | null>(null);
+  // const navigate = useNavigate();
   
 
   useEffect(() => {
@@ -49,6 +51,7 @@ const App: React.FC = () => {
     setIsLoggedInAdmin(false);
     setIsLoggedInUser(false);
     setId(null);
+    // navigate('/');
     localStorage.removeItem('adminToken');
     localStorage.removeItem('userToken');
     localStorage.removeItem('userId');

@@ -33,6 +33,7 @@ def residence(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         student_id = data.get('student_id')
+        payment = data.get('payment')
         room_id = data.get('room_id')
         move_in_date = data.get('move_in_date')
         move_out_date = data.get('move_out_date')
@@ -42,7 +43,8 @@ def residence(request):
                 student_id=student_id,
                 room_id=room_id,
                 move_in_date=move_in_date,
-                move_out_date=move_out_date
+                move_out_date=move_out_date,
+                payment=payment
             )
             
             return JsonResponse({
@@ -50,7 +52,8 @@ def residence(request):
                 'student_id': residence.student_id,
                 'room_id': residence.room_id,
                 'move_in_date': residence.move_in_date,
-                'move_out_date': residence.move_out_date
+                'move_out_date': residence.move_out_date,
+                'payment': residence.payment
             })
         except Exception as e:
             return JsonResponse({'message': str(e)}, status=400)

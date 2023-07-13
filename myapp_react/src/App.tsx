@@ -88,7 +88,7 @@ const App: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           /></Link>
-           
+          
           ) : (
             <motion.img 
               key="closed"
@@ -104,12 +104,12 @@ const App: React.FC = () => {
           
 
 
-        <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Home</Link> <br/>
-        <Link to="/students" style={{ color: '#fff', textDecoration: 'none' }}>дибылы</Link><br/>
+        <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Главная Страница</Link> <br/>
+        <Link to="/students" style={{ color: '#fff', textDecoration: 'none' }}>Список студентов</Link><br/>
         
         {!isLoggedInAdmin && !isLoggedInUser && (
           <div>
-            <Link to="/login" style={{ color: '#fff', textDecoration: 'none' }}>Войти</Link>
+            <Link to="/login" style={{ color: '#fff', textDecoration: 'none' }}>Войти в аккаунт</Link>
           </div>
         )}
         {isLoggedInAdmin && (

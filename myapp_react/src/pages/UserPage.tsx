@@ -67,7 +67,7 @@ const AddResidenceForm = ({ onAddResidence, idStudent2, idUser2 }: AddResidenceF
   return (
       <form onSubmit={handleSubmit}>
           <div>
-              <label htmlFor="student-id">idUser{idUser2}idStudent{idStudent2}</label>
+              <label htmlFor="student-id">id пользователя:{idUser2};id студента:{idStudent2}</label>
           </div>
           <div>
               <label htmlFor="room-id">Номер комнаты:</label>
@@ -341,7 +341,7 @@ const UserPage: React.FC<UserPageProps> = ({ idUser, onLogout }) => {
                                             Общая стоимость: {info.total_cost}<br />
                                         </Typography.Paragraph>
                                         <div className="checkbox-wrapper-10">
-                                            <input className="tgl tgl-flip" id="cb5" type="checkbox" checked={info.payment} />
+                                            <input className="tgl tgl-flip" id="cb5" type="checkbox" checked={info.payment} disabled/>
                                             <label className="tgl-btn" data-tg-off="Плоти-налог" data-tg-on="Уплочно!" htmlFor="cb5"></label>
                                         </div>
                                     </div>

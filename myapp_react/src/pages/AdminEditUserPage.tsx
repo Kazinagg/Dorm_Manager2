@@ -278,6 +278,18 @@ const AdminEditUserPage: React.FC = () => {
 
     const handleCheckboxChange = (residence_id: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const isChecked = event.target.checked;
+
+
+        setUserResidenceInfo(prevState => {
+            const residenceIndex = prevState.findIndex(residence => residence.residence_id === residence_id);
+            if (residenceIndex !== -1) {
+                const updatedResidence = { ...prevState[residenceIndex], payment: isChecked };
+                return [...prevState.slice(0, residenceIndex), updatedResidence, ...prevState.slice(residenceIndex + 1)];
+            }
+            return prevState;
+        });
+        
+        
         axios.post('/api/data/update/payment/' + residence_id + '/' + isChecked)
             .then(response => {
                 console.log(response.data);
@@ -336,10 +348,16 @@ const AdminEditUserPage: React.FC = () => {
                                             Дата выселения: {info.move_out_date}<br />
                                             Общая стоимость: {info.total_cost}<br />
                                         </Typography.Paragraph>
-                                    <div className="checkbox-wrapper-10">
+                                        <div className="checkbox-wrapper-26">
+                                            <input type="checkbox" id="_checkbox-26" checked={info.payment} onChange={(event) => handleCheckboxChange(info.residence_id, event)}></input>
+                                            <label htmlFor="_checkbox-26">
+                                                <div className="tick_mark"></div>
+                                            </label>
+                                        </div>
+                                    {/* <div className="checkbox-wrapper-10">
                                         <input className="tgl tgl-flip" id="cb5" type="checkbox" checked={info.payment} onChange={(event) => handleCheckboxChange(info.residence_id, event)} />
                                         <label className="tgl-btn" data-tg-off="Плоти налог" data-tg-on="Уплочно!" htmlFor="cb5"></label>
-                                    </div>
+                                    </div> */}
                                     </div>
                                     <Button onClick={() => handleDeleteSelectResidence(info.residence_id)}>Удалить информацию о проживании</Button>
                                 </div>

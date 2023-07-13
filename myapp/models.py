@@ -46,7 +46,9 @@ class student_info(models.Model):
 
 
 class UserResidenceInfo(models.Model):
-    user_id = models.IntegerField(primary_key=True)
+    residence_id = models.IntegerField(primary_key=True)
+    user_id = models.IntegerField()
+    student_id = models.IntegerField()
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)

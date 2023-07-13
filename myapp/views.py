@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse
-from .models import student_country_view, users_admins_view, student_info, Users, Countries, Students, UserResidenceInfo
+from .models import student_country_view, users_admins_view, student_info, Users, Countries, Students, UserResidenceInfo, Rooms, Residence
 from django.db import connection
 import json
 from django.shortcuts import render
@@ -8,9 +8,17 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from .models import student_info, Users
 from django.forms.models import model_to_dict
+# from .models import Residence
 # from django.views import View
 # from .models import Residence
 # from .serializers import ResidenceSerializer
+
+
+def get_rooms(request):
+    admin = Rooms.objects.all().values()  # получаем все объекты Student
+    admin_list = list(admin)  # преобразуем QuerySet в список словарей
+    return JsonResponse(admin_list, safe=False)
+
 
 
 def get_UserResidenceInfo(request):
@@ -18,6 +26,31 @@ def get_UserResidenceInfo(request):
     students_list = list(students)  # преобразуем QuerySet в список словарей
     return JsonResponse(students_list, safe=False)
 
+# def add_residence(request):
+    
+#     return HttpResponse('OK')
+def residence(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        student_id = data.get('student_id')
+        room_id = data.get('room_id')
+        move_in_date = data.get('move_in_date')
+        move_out_date = data.get('move_out_date')
+        
+        residence = Residence.objects.create(
+            student_id=student_id,
+            room_id=room_id,
+            move_in_date=move_in_date,
+            move_out_date=move_out_date
+        )
+        
+        return JsonResponse({
+            'residence_id': residence.residence_id,
+            'student_id': residence.student_id,
+            'room_id': residence.room_id,
+            'move_in_date': residence.move_in_date,
+            'move_out_date': residence.move_out_date
+        })
 
 # class UserResidenceInfoView(View):
 #     def get(self, request):
@@ -210,6 +243,14 @@ def delete_student(request, student_id):
     try:
         student = Students.objects.get(student_id=student_id)
         student.delete()
+        return JsonResponse({'message': 'Student was deleted successfully!'}, status=200)
+    except Students.DoesNotExist:
+        return JsonResponse({'error': 'Student not found!'}, status=404)
+
+def deleteResidence(request, residence_id):
+    try:
+        residence = Residence.objects.get(residence_id=residence_id)
+        residence.delete()
         return JsonResponse({'message': 'Student was deleted successfully!'}, status=200)
     except Students.DoesNotExist:
         return JsonResponse({'error': 'Student not found!'}, status=404)

@@ -6,6 +6,7 @@ import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import StudentsPage from './pages/StudentsPage';
+import AdminEditUserPage from './pages/AdminEditUserPage';
 import logo from './images/logo.png';
 import logo_min from './images/logo_min.png';
 
@@ -67,7 +68,7 @@ const App: React.FC = () => {
       <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         
         <motion.div 
-          style={{position: 'fixed', maxWidth: '15%', background: '#1f2932', height: '100%'}}
+          style={{position: 'fixed', maxWidth: '15%', background: '#1f2932', height: '100%', zIndex: '9999'}}
           initial="closed"
           animate={isHovered ? "open" : "closed"}
           variants={navVariants}
@@ -130,7 +131,12 @@ const App: React.FC = () => {
         <Route path="/students" element={<StudentsPage />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         {isLoggedInAdmin &&            (
-          <Route path="/admin" element={<AdminPage onLogout={handleLogout} />} />
+          <>
+            <Route path="/admin" element={<AdminPage onLogout={handleLogout} />} />
+            <Route path="/admins/users/:idStudent/:idUser" element={<AdminEditUserPage />} />
+          </>
+          
+          
         )}
         {isLoggedInUser && id && (
           <Route path="/user" element={<UserPage userId={id} onLogout={handleLogout} />} />

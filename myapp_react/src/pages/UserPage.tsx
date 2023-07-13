@@ -29,11 +29,6 @@ interface UserPageProps {
   onLogout: () => void;
 }
 
-// interface SelectProps<T = any> {
-//   value?: T;
-//   onChange?: (value: T) => void;
-//   // другие свойства
-// }
 
 const UserPage: React.FC<UserPageProps> = ({ userId, onLogout }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -59,24 +54,6 @@ const UserPage: React.FC<UserPageProps> = ({ userId, onLogout }) => {
       setUser((prevUser) => ({ ...prevUser!, ['country_id']: countriesData.find(country => country.country_name === userData?.country_name)?.country_id || 0 }));
     });
   }, [userId]);
-
-  // useEffect(() => {
-  //   axios.get('/api/countries/')
-  //     .then(response => {
-  //       setCountries(response.data);
-  //     })
-  //     .catch(error => {
-  //       console.error('There was an!', error);
-  //     });
-  // }, []);
-
-  // const handleChangePassword = () => {
-  //   axios.post(`/api/users/${userId}/change-password`, { password: newPassword }, {
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   });
-  // };
 
   const handleLogout = () => {
     onLogout();

@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HomePage.css';
 import './AdminPage.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+// import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 type Student = {
   student_id: number;
@@ -25,6 +26,7 @@ type Countries = {
 };
 type UserResidenceInfo = {
   user_id: number;
+  student_id: number;
   username: string;
   password: string;
   first_name: string;
@@ -33,6 +35,21 @@ type UserResidenceInfo = {
   move_in_date: string;
   move_out_date: string;
   total_cost: number;
+}
+
+type Rooms = {
+  room_id: number;
+  floor: number;
+  room_number: number;
+  cost: number;
+}
+
+type Residence = {
+  residence_id: number;
+  student_id: number;
+  room_id: number;
+  move_in_date: string;
+  move_out_date: string;
 }
 
 type SortConfig = {
@@ -48,12 +65,14 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'first_name', direction: 'ascending' });
   // const [student, setStudent] = useState<Student>(selectedStudent);
   const [rows, setRows] = useState<Student[]>([]);
-  const [Residence, setResidence] = useState<UserResidenceInfo[]>([]);
+  const [UserResidenceInfo, setUserResidenceInfo] = useState<UserResidenceInfo[]>([]);
   const [countries, setCountries] = useState<Countries[]>([]);
+  const [rooms, setRooms] = useState<Rooms[]>([]);
+  const [residence, setResidence] = useState<Residence[]>([]);
 
   const navigate = useNavigate();
-  const [update, setUpdate] = useState<true | false>(false);
-  const [info, setInfo] = useState<true | false>(false);
+  // const [update, setUpdate] = useState<true | false>(false);
+  // const [info, setInfo] = useState<true | false>(false);
 
   // const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
@@ -75,6 +94,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     password: '',
     email: '',
   });
+
+
   const [showForm, setShowForm] = useState(false);
 
   const handleInputChange = (event:  React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -86,34 +107,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   
 // pages/AdminPage.tsx
 
-const handleAddStudent = () => {
-  const csrftoken = getCookie('csrftoken'); // Получаем CSRF токен
 
-  axios.post('/api/data/addStudent/', newStudent, {
-    headers: {
-      'X-CSRFToken': csrftoken // Добавляем CSRF токен в заголовки запроса
-    }
-  })
-  .then(response => {
-    // Добавляем нового студента в состояние rows
-    // setRows([...rows, response.data]);
-    setShowForm(!showForm)
-    setNewStudent({
-      student_id: 0,
-      user_id: 0,
-      first_name: '',
-      last_name: '',
-      birth_date: '',
-      gender: '',
-      country_id: 0,
-      country_name: '',
-      phone: '',
-      username: '',
-      password: '',
-      email: '',
-    });
-  });
-};
 
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -124,12 +118,10 @@ const handleAddStudent = () => {
 
   const filteredRows = rows.filter(
     (row) =>
-      row.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.country_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (row.first_name && row.first_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (row.last_name && row.last_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (row.country_name && row.country_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (row.email && row.email.toLowerCase().includes(searchTerm.toLowerCase()))
       // добавьте здесь другие поля, по которым вы хотите фильтровать
   );
     
@@ -159,7 +151,13 @@ const handleAddStudent = () => {
       });
     axios.get('/api/data/UserResidenceInfo/')
       .then(response => {
-        setResidence(response.data);
+        setUserResidenceInfo(response.data);
+        console.log("response.data");
+        console.log(response.data);
+      });
+    axios.get('/api/data/Rooms/')
+      .then(response => {
+        setRooms(response.data);
         console.log("response.data");
         console.log(response.data);
       });
@@ -215,10 +213,10 @@ const handleAddStudent = () => {
     
     if (type){
       setSelectedStudent(student);
-      setUpdate(true)
+      // setUpdate(true)
     }else{
-      setSelectedResidence(Residence.filter(residence => residence.user_id === student.user_id));
-      setInfo(true)
+      setSelectedResidence(UserResidenceInfo.filter(residence => residence.user_id === student.user_id));
+      // setInfo(true)
     }
     // setUpdate(true)
   };
@@ -227,11 +225,55 @@ const handleAddStudent = () => {
     setSelectedStudent(null);
     if (type){
       setSelectedStudent(null);
-      setUpdate(false)
+      // setUpdate(false)
     }else{
       setSelectedResidence(null);
-      setInfo(false)
+      // setInfo(false)
     }
+  };
+
+  const handleAddStudent = () => {
+    const csrftoken = getCookie('csrftoken'); // Получаем CSRF токен
+  
+    axios.post('/api/data/addStudent/', newStudent, {
+      headers: {
+        'X-CSRFToken': csrftoken // Добавляем CSRF токен в заголовки запроса
+      }
+    })
+    .then(response => {
+      // Добавляем нового студента в состояние rows
+      // setRows([...rows, response.data]);
+      setShowForm(!showForm)
+      setNewStudent({
+        student_id: 0,
+        user_id: 0,
+        first_name: '',
+        last_name: '',
+        birth_date: '',
+        gender: '',
+        country_id: 0,
+        country_name: '',
+        phone: '',
+        username: '',
+        password: '',
+        email: '',
+      });
+      window.location.reload();
+    });
+    // console.log("window.location.reload()")
+    // window.location.reload()
+    // navigate("/admin")
+  };
+
+  // setNewResidence
+  const handleAddSelectResidence = () => {
+    axios.post('/api/data/addResidence/')
+    .then(response => {
+      // window.location.reload();
+    });
+    // console.log("window.location.reload()")
+    // window.location.reload()
+    // navigate("/admin")
   };
 
   const handleDeleteStudent = (studentId: number) => {
@@ -245,6 +287,17 @@ const handleAddStudent = () => {
         })
         .catch(error => console.error(error));
   };
+  const handleDeleteSelectResidence = (userResidenceInfo: UserResidenceInfo) => {
+    axios.post('/api/data/updateStudent/' + userResidenceInfo.student_id)
+          .then(response => {
+              console.log(response.data);
+              // Обновляем состояние rows, заменяя обновленного студента
+              // setRows(rows.map(row => row.student_id === student.student_id ? student : row));
+          })
+          .catch(error => {
+            console.error(error);
+          });
+  }
 
   const handleUpdateStudent = (student: Student) => {
       axios.post('/api/data/updateStudent/' + student.student_id + '/', student)
@@ -346,13 +399,23 @@ const handleAddStudent = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Имя пользователя</th>
+                  <th>Логин</th>
                   <th>Имя</th>
                   <th>Фамилия</th>
                   <th>Номер комнаты</th>
                   <th>Дата заселения</th>
                   <th>Дата выселения</th>
                   <th>Общая стоимость</th>
+                </tr>
+                <tr>
+                  <td>{}</td>
+                  <td>{}</td>
+                  <td>{}</td>
+                  <th>Номер комнаты</th>
+                  <th>Дата заселения</th>
+                  <th>Дата выселения</th>
+                  <th>Общая стоимость</th>
+                  <th><button className="btn" onClick={() => handleAddSelectResidence()}>Добавить</button></th>
                 </tr>
               </thead>
               <tbody>
@@ -365,11 +428,19 @@ const handleAddStudent = () => {
                     <td>{row.move_in_date}</td>
                     <td>{row.move_out_date}</td>
                     <td>{row.total_cost}</td>
+                    <td>
+                      <button className="btn" onClick={() => handleDeleteSelectResidence(row)}>Удалить</button>
+                      {/* <button className="btn" onClick={() => handleUpdateSelectResidence(row)}>Изменить</button> */}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <button className="btn" onClick={() => handleCloseEditForm(false)}>Закрыть</button>
+            <div>
+              {/* <button className="btn" onClick={() => handleAddSelectResidence()}>Добавить</button> */}
+              <button className="btn" onClick={() => handleCloseEditForm(false)}>Закрыть</button>
+            </div>
+            
           </div>
         )}
         {selectedStudent && (
@@ -421,6 +492,8 @@ const handleAddStudent = () => {
             <div>
               <button className="btn" onClick={() => handleDeleteStudent(selectedStudent.student_id)}>Удалить</button>
               <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
+              <Link to={`/admins/users/${selectedStudent.student_id}/${selectedStudent.user_id}/`}>Редактировать пользователя</Link>
+
               <button className="btn" onClick={() => handleCloseEditForm(true)}>Закрыть</button>
             </div>
           </div>

@@ -37,7 +37,11 @@ urlpatterns = [
     path('api/users/', views.save_user, name='save_user'),
     # path('api/users/get/<int:user_id>', views.cancel_edit, name='cancel_edit'),
 
+    path('api/data/Rooms/', views.get_rooms),
+
     path('api/data/UserResidenceInfo/', views.get_UserResidenceInfo),
+    path('api/data/addResidence/', views.residence),
+    path('api/data/deleteResidence/<int:residence_id>', views.deleteResidence),
 
     path('api/users/get/<int:user_id>', views.get_student, name='get_student'),
     # path('api/users/<int:studentId>', views.update_student, name='update_student'),

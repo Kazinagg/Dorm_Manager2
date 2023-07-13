@@ -6,17 +6,63 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   } */
 
-  .main {
+  /* .main {
+    display: flex;
+  } */
+
+  .editModeDiv {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.418);
+
+  }
+
+  .editMode {
+    position: fixed;
+    background-color: white ;
+    border-radius: 8px;
+    box-shadow: #f9f9f9;
+    width: 40%;
+    padding: 80px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .residenceDiv {
+    width: 60%;
+    float: right;
     display: flex;
   }
   
+  .residenceForm, .residenceTitle {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 35px;
+    margin: 35px;
+    box-shadow: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .residenceForm {
+    /* Дополнительные стили для residenceForm */
+  }
+  
+  .residenceTitle {
+    /* Дополнительные стили для residenceTitle */
+  }
+  
   .profile {
-    /* position: fixed;
-    z-index: 0; */
+    position: fixed;
+    z-index: 0;
     width: 30%;
     height: 100%;
     background-color: #f9f9f9;
     padding: 35px;
+    margin: 35px;
+    box-shadow: #f9f9f9;
+    border-radius: 8px;
   }
   
   .profile div {

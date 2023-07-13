@@ -37,20 +37,23 @@ def residence(request):
         move_in_date = data.get('move_in_date')
         move_out_date = data.get('move_out_date')
         
-        residence = Residence.objects.create(
-            student_id=student_id,
-            room_id=room_id,
-            move_in_date=move_in_date,
-            move_out_date=move_out_date
-        )
-        
-        return JsonResponse({
-            'residence_id': residence.residence_id,
-            'student_id': residence.student_id,
-            'room_id': residence.room_id,
-            'move_in_date': residence.move_in_date,
-            'move_out_date': residence.move_out_date
-        })
+        try:
+            residence = Residence.objects.create(
+                student_id=student_id,
+                room_id=room_id,
+                move_in_date=move_in_date,
+                move_out_date=move_out_date
+            )
+            
+            return JsonResponse({
+                'residence_id': residence.residence_id,
+                'student_id': residence.student_id,
+                'room_id': residence.room_id,
+                'move_in_date': residence.move_in_date,
+                'move_out_date': residence.move_out_date
+            })
+        except Exception as e:
+            return JsonResponse({'message': str(e)}, status=400)
 
 # class UserResidenceInfoView(View):
 #     def get(self, request):

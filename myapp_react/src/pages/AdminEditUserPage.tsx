@@ -107,23 +107,23 @@ const AddResidenceForm = ({ onAddResidence }: AddResidenceFormProps) => {
 
 
 type User = {
-  student_id: number;
-  first_name: string;
-  last_name: string;
-  birth_date: string;
-  gender: string;
-  country_name: string;
-  country_id: number;
-  phone: string;
-  username: string;
-  password:string;
-  email: string;
-  avatar: string;
+    student_id: number;
+    first_name: string;
+    last_name: string;
+    birth_date: string;
+    gender: string;
+    country_name: string;
+    country_id: number;
+    phone: string;
+    username: string;
+    password:string;
+    email: string;
+    avatar: string;
 };
 
 type Countries = {
-  country_id: number;
-  country_name: string;
+    country_id: number;
+    country_name: string;
 };
 
 type UserResidenceInfo = {
@@ -141,19 +141,19 @@ type UserResidenceInfo = {
 }
 
 type Rooms = {
-  room_id: number;
-  floor: number;
-  room_number: number;
-  cost: number;
+    room_id: number;
+    floor: number;
+    room_number: number;
+    cost: number;
 }
 
 type Residence = {
-  residence_id: number;
-  student_id: number;
-  room_id: number;
-  move_in_date: string;
-  move_out_date: string;
-}
+    residence_id: number;
+    student_id: number;
+    room_id: number;
+    move_in_date: string;
+    move_out_date: string;
+    }
 
 type Student = {
     student_id: number;
@@ -239,27 +239,28 @@ const AdminEditUserPage: React.FC = () => {
     //   setUser((prevUser) => ({ ...prevUser!, [name]: value.value }));
     // };
     
-     const handleSelectChange1 = (country_id: number, name: string) => {
-      console.log(country_id);
-      setUser((prevUser) => ({ ...prevUser!, [name]: country_id }));
-      const country = countries.find(country => country.country_id === country_id);
-      if (country) {
-          setUser((prevUser) => ({ ...prevUser!, ['country_name']: country.country_name}));
-      }
-     };
-     
-     const handleSelectChange2 = (value: string, name: string) => {
-       setUser((prevUser) => ({ ...prevUser!, [name]: value }));
-     };
+    const handleSelectChange1 = (country_id: number, name: string) => {
+        console.log(country_id);
+        setUser((prevUser) => ({ ...prevUser!, [name]: country_id }));
+        const country = countries.find(country => country.country_id === country_id);
+        if (country) {
+            setUser((prevUser) => ({ ...prevUser!, ['country_name']: country.country_name}));
+        }
+    };
+    
+    const handleSelectChange2 = (value: string, name: string) => {
+        setUser((prevUser) => ({ ...prevUser!, [name]: value }));
+    };
 
-     const handleAddSelectResidence = async (residenceData: Residence) => {
+    const handleAddSelectResidence = async (residenceData: Residence) => {
         try {
             const response = await axios.post('/api/data/addResidence/', residenceData);
             window.location.reload();
             // Обновляем состояние с новой информацией о проживании
             setUserResidenceInfo([...userResidenceInfo, response.data]);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
+            alert('Ошибка при добавлении проживания: ' + error.response.data.message.split('\n')[0]);
         }
     };
 
@@ -279,37 +280,60 @@ const AdminEditUserPage: React.FC = () => {
     }
 
     return (
-        <div>
-            <div className="main">
-            <div className="profile">
-                <><div className="user-avatar">
-                        <Avatar size={128} src={user.avatar} />
-                    </div></>
-                <><Typography.Title level={3}>
-                            {user.first_name} {user.last_name}
-                        </Typography.Title></>
-                <><Typography.Paragraph>
-                            Дата рождения: {user.birth_date}<br />
-                            Пол: {user.gender}<br />
-                            Страна проживания: {user.country_name}<br />
-                            Телефонный номер: {user.phone}<br />
-                            Логин/Имя пользователя :{user.username}<br />
-                            Пароль :{user.password}<br />
-                            Электронная почта: {user.email}<br />
-                        </Typography.Paragraph>
+        <>
+            <div>
+                <div className="profile">
+                    <><div className="user-avatar">
+                            <Avatar size={128} src={user.avatar} />
+                        </div></>
+                    <><Typography.Title level={3}>
+                                {user.first_name} {user.last_name}
+                            </Typography.Title></>
+                    <><Typography.Paragraph>
+                                Дата рождения: {user.birth_date}<br />
+                                Пол: {user.gender}<br />
+                                Страна проживания: {user.country_name}<br />
+                                Телефонный номер: {user.phone}<br />
+                                Логин/Имя пользователя :{user.username}<br />
+                                Пароль :{user.password}<br />
+                                Электронная почта: {user.email}<br />
+                            </Typography.Paragraph>
 
-                        
-                        </>
-                <>{!editMode && (
-                            <div>
-                                <Button type="primary" onClick={handleEdit}>
-                                    Редактировать
-                                </Button>
+                            
+                            </>
+                    <>{!editMode && (
+                                <div>
+                                    <Button type="primary" onClick={handleEdit}>
+                                        Редактировать
+                                    </Button>
+                                </div>
+                            )}</>
+                </div>
+                <div className="residenceDiv">
+                    <div className="residenceForm">
+                        <AddResidenceForm onAddResidence={handleAddSelectResidence} />
+                    </div>
+                    <div>{userResidenceInfo && userResidenceInfo.map(info => (
+                            <div  key={info.room_number}>
+                                <div className="residenceTitle">
+                                    <Typography.Title level={4}>Информация о проживании</Typography.Title>
+                                    <Typography.Paragraph className="residenceTitle">
+                                        {/* Номер student_id: {info.student_id}<br /> */}
+                                        Номер комнаты: {info.room_number}<br />
+                                        Дата заселения: {info.move_in_date}<br />
+                                        Дата выселения: {info.move_out_date}<br />
+                                        Общая стоимость: {info.total_cost}<br />
+                                    </Typography.Paragraph>
+                                    <Button onClick={() => handleDeleteSelectResidence(info.residence_id)}>Удалить информацию о проживании</Button>
+                                </div>
                             </div>
-                        )}</>
-            </div>
-            {editMode && (
-                            <div>
+                        ))}</div>
+                </div>
+
+                <>
+                {editMode && (
+                        <div className='editModeDiv'>
+                            <div className='editMode'>
                                 <Form layout="vertical">
                                     <Form.Item label="Имя">
                                         <Input name="first_name" value={user.first_name} onChange={handleChange} />
@@ -351,23 +375,9 @@ const AdminEditUserPage: React.FC = () => {
                                 </Button>{' '}
                                 <Button onClick={handleCancel}>Отмена</Button>
                             </div>
-                        )}
-                <div>
-                    <div><AddResidenceForm onAddResidence={handleAddSelectResidence} /></div>
-                    <div>{userResidenceInfo && userResidenceInfo.map(info => (
-                            <div key={info.room_number}>
-                                <Typography.Title level={4}>Информация о проживании</Typography.Title>
-                                <Typography.Paragraph>
-                                    {/* Номер student_id: {info.student_id}<br /> */}
-                                    Номер комнаты: {info.room_number}<br />
-                                    Дата заселения: {info.move_in_date}<br />
-                                    Дата выселения: {info.move_out_date}<br />
-                                    Общая стоимость: {info.total_cost}<br />
-                                </Typography.Paragraph>
-                                <Button onClick={() => handleDeleteSelectResidence(info.residence_id)}>Удалить информацию о проживании</Button>
-                            </div>
-                        ))}</div>
-                </div>
+                        </div>
+                    )}
+                </>
 
             </div>
             
@@ -457,14 +467,14 @@ const AdminEditUserPage: React.FC = () => {
                         </div>
                     ))}
                     {/* {!userResidenceInfo && ( 
-                        <div>
+                        <>
                             <AddResidenceForm onAddResidence={handleAddSelectResidence} />
                             {/* <Button onClick={handleAddSelectResidence}>Добавить информацию о проживании</Button> 
                         </div>
 
                 </Card>
             </div> */}
-        </div>
+        </>
     );
 };
 

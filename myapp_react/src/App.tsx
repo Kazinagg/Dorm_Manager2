@@ -139,7 +139,7 @@ const App: React.FC = () => {
           
         )}
         {isLoggedInUser && id && (
-          <Route path="/user" element={<UserPage userId={id} onLogout={handleLogout} />} />
+          <Route path="/user" element={<UserPage idUser={id} onLogout={handleLogout} />} />
         )}
       </Routes>
 

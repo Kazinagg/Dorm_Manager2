@@ -41,17 +41,28 @@
     border-radius: 10px;
     padding: 35px;
     margin: 35px;
-    box-shadow: #f9f9f9;
     border-radius: 8px;
-  }
+    box-shadow: 10px 5px 5px black;
+    transition: transform 3s, box-shadow 3s;
+}
+
+.residenceForm:hover {
+    box-shadow: 20px 10px 10px black;
+    transform: translate(-10px, -5px);
+}
+
+.residenceTitle:hover, .residenceTitle:hover > * {
+  box-shadow: 20px 10px 10px black;
+  transform: translate(-10px, -5px);
+}
   
-  .residenceForm {
-    /* Дополнительные стили для residenceForm */
+  /* .residenceForm {
+
   }
   
   .residenceTitle {
-    /* Дополнительные стили для residenceTitle */
-  }
+
+  } */
   
   .profile {
     position: fixed;

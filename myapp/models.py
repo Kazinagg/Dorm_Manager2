@@ -87,6 +87,7 @@ class Residence(models.Model):
     room = models.ForeignKey('Rooms', models.DO_NOTHING, blank=True, null=True)
     move_in_date = models.DateField(blank=True, null=True)
     move_out_date = models.DateField(blank=True, null=True)
+    payment = models.IntegerField()
     @property
     def total_cost(self):
         return self.room.cost * (self.move_out_date - self.move_in_date).days

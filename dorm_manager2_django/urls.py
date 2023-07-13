@@ -43,6 +43,8 @@ urlpatterns = [
     path('api/data/addResidence/', views.residence),
     path('api/data/deleteResidence/<int:residence_id>', views.deleteResidence),
 
+    path('api/data/update/payment/<int:residence_id>/<str:isChecked>', views.update_payment, name='update_payment'),
+
     path('api/users/get/<int:user_id>', views.get_student, name='get_student'),
     # path('api/users/<int:studentId>', views.update_student, name='update_student'),
     # path('api/usersint/<int:studentId>/change-password', views.change_password, name='change_password'),

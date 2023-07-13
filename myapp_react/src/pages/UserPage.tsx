@@ -55,7 +55,8 @@ const AddResidenceForm = ({ onAddResidence, idStudent2, idUser2 }: AddResidenceF
           student_id: Number(idStudent2),
           room_id: roomId,
           move_in_date: moveInDate,
-          move_out_date: moveOutDate
+          move_out_date: moveOutDate,
+          payment: false
       });
       setStudentId(0);
       setRoomId(0);
@@ -141,6 +142,7 @@ type UserResidenceInfo = {
   move_in_date: string;
   move_out_date: string;
   total_cost: number;
+  payment: boolean;
 }
 
 type Rooms = {
@@ -156,6 +158,7 @@ type Residence = {
   room_id: number;
   move_in_date: string;
   move_out_date: string;
+  payment: boolean;
   }
 
 type Student = {
@@ -328,14 +331,18 @@ const UserPage: React.FC<UserPageProps> = ({ idUser, onLogout }) => {
                             <div  key={info.room_number}>
                                 <div className="residenceTitle">
                                     <div >
-                                      <Typography.Title level={4}>Информация о проживании</Typography.Title>
-                                      <Typography.Paragraph >
-                                          {/* Номер student_id: {info.student_id}<br /> */}
-                                          Номер комнаты: {info.room_number}<br />
-                                          Дата заселения: {info.move_in_date}<br />
-                                          Дата выселения: {info.move_out_date}<br />
-                                          Общая стоимость: {info.total_cost}<br />
-                                      </Typography.Paragraph>
+                                        <Typography.Title level={4}>Информация о проживании</Typography.Title>
+                                        <Typography.Paragraph >
+                                            {/* Номер student_id: {info.student_id}<br /> */}
+                                            Номер комнаты: {info.room_number}<br />
+                                            Дата заселения: {info.move_in_date}<br />
+                                            Дата выселения: {info.move_out_date}<br />
+                                            Общая стоимость: {info.total_cost}<br />
+                                        </Typography.Paragraph>
+                                        <div className="checkbox-wrapper-10">
+                                            <input className="tgl tgl-flip" id="cb5" type="checkbox" checked={info.payment} />
+                                            <label className="tgl-btn" data-tg-off="Плоти-налог" data-tg-on="Уплочно!" htmlFor="cb5"></label>
+                                        </div>
                                     </div>
                                     <Button onClick={() => handleDeleteSelectResidence(info.residence_id)}>Удалить информацию о проживании</Button>
                                 </div>

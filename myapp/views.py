@@ -55,6 +55,20 @@ def residence(request):
         except Exception as e:
             return JsonResponse({'message': str(e)}, status=400)
 
+
+def update_payment(request, residence_id, isChecked):
+    # Получаем объект Residence по идентификатору
+    residence = Residence.objects.get(residence_id=residence_id)
+    
+    # Обновляем значение поля payment
+    residence.payment = isChecked == 'true'
+    
+    # Сохраняем изменения в базе данных
+    residence.save()
+    
+    return JsonResponse({'status': 'success'})
+
+
 # class UserResidenceInfoView(View):
 #     def get(self, request):
 #         residences = Residence.objects.all()

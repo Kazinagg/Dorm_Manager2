@@ -138,6 +138,7 @@ type UserResidenceInfo = {
     move_in_date: string;
     move_out_date: string;
     total_cost: number;
+    payment: boolean;
 }
 
 type Rooms = {
@@ -275,6 +276,16 @@ const AdminEditUserPage: React.FC = () => {
             setUserResidenceInfo(prevResidenceInfo => prevResidenceInfo.filter(item => item.residence_id !== residence_id));
     };
 
+    const handleCheckboxChange = (residence_id: number, event: React.ChangeEvent<HTMLInputElement>) => {
+        const isChecked = event.target.checked;
+        axios.post('/api/data/update/payment/' + residence_id + '/' + isChecked)
+            .then(response => {
+                console.log(response.data);
+            })
+        // Здесь вы можете использовать isChecked и residence_id для обновления записи в базе данных
+        // ...
+    }
+
     if (!user) {
         return <div>Loading...</div>;
     }
@@ -316,14 +327,20 @@ const AdminEditUserPage: React.FC = () => {
                     <div>{userResidenceInfo && userResidenceInfo.map(info => (
                             <div  key={info.room_number}>
                                 <div className="residenceTitle">
-                                    <Typography.Title level={4}>Информация о проживании</Typography.Title>
-                                    <Typography.Paragraph className="residenceTitle">
-                                        {/* Номер student_id: {info.student_id}<br /> */}
-                                        Номер комнаты: {info.room_number}<br />
-                                        Дата заселения: {info.move_in_date}<br />
-                                        Дата выселения: {info.move_out_date}<br />
-                                        Общая стоимость: {info.total_cost}<br />
-                                    </Typography.Paragraph>
+                                    <div >
+                                        <Typography.Title level={4}>Информация о проживании</Typography.Title>
+                                        <Typography.Paragraph >
+                                            {/* Номер student_id: {info.student_id}<br /> */}
+                                            Номер комнаты: {info.room_number}<br />
+                                            Дата заселения: {info.move_in_date}<br />
+                                            Дата выселения: {info.move_out_date}<br />
+                                            Общая стоимость: {info.total_cost}<br />
+                                        </Typography.Paragraph>
+                                    <div className="checkbox-wrapper-10">
+                                        <input className="tgl tgl-flip" id="cb5" type="checkbox" checked={info.payment} onChange={(event) => handleCheckboxChange(info.residence_id, event)} />
+                                        <label className="tgl-btn" data-tg-off="Плоти налог" data-tg-on="Уплочно!" htmlFor="cb5"></label>
+                                    </div>
+                                    </div>
                                     <Button onClick={() => handleDeleteSelectResidence(info.residence_id)}>Удалить информацию о проживании</Button>
                                 </div>
                             </div>

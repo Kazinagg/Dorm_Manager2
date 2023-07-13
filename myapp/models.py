@@ -57,6 +57,7 @@ class UserResidenceInfo(models.Model):
     move_in_date = models.DateField()
     move_out_date = models.DateField()
     total_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    payment = models.BooleanField()
 
     class Meta:
         managed = False
@@ -87,7 +88,7 @@ class Residence(models.Model):
     room = models.ForeignKey('Rooms', models.DO_NOTHING, blank=True, null=True)
     move_in_date = models.DateField(blank=True, null=True)
     move_out_date = models.DateField(blank=True, null=True)
-    payment = models.IntegerField()
+    payment = models.BooleanField()
     @property
     def total_cost(self):
         return self.room.cost * (self.move_out_date - self.move_in_date).days

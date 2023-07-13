@@ -112,6 +112,7 @@ const AddResidenceForm = ({ onAddResidence, idStudent2, idUser2 }: AddResidenceF
 
 type User = {
   student_id: number;
+  user_id: number;
   first_name: string;
   last_name: string;
   birth_date: string;
@@ -327,7 +328,7 @@ const UserPage: React.FC<UserPageProps> = ({ idUser, onLogout }) => {
                     <div className="residenceForm">
                         <AddResidenceForm onAddResidence={handleAddSelectResidence} idStudent2={user.student_id} idUser2={idUser}/>
                     </div>
-                    <div>{userResidenceInfo && userResidenceInfo.map(info => (
+                    <div>{userResidenceInfo && userResidenceInfo.filter(info => info.user_id === idUser).map(info => (
                             <div  key={info.room_number}>
                                 <div className="residenceTitle">
                                     <div >

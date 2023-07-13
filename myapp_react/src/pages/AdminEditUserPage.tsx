@@ -324,7 +324,7 @@ const AdminEditUserPage: React.FC = () => {
                     <div className="residenceForm">
                         <AddResidenceForm onAddResidence={handleAddSelectResidence} />
                     </div>
-                    <div>{userResidenceInfo && userResidenceInfo.map(info => (
+                    <div>{userResidenceInfo && userResidenceInfo.filter(info => info.user_id === Number(idUser)).map(info => (
                             <div  key={info.room_number}>
                                 <div className="residenceTitle">
                                     <div >

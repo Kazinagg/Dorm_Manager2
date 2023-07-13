@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/myapp_react/node_modules
+# /myapp_react/node_modules
 /myapp_react/.pnp
 /myapp_react/.pnp.js
 
@@ -21,3 +21,5 @@
 myapp_react/npm-debug.log*
 myapp_react/yarn-debug.log*
 myapp_react/yarn-error.log*
+myapp_react/build/index.html
+myapp_react/node_modules

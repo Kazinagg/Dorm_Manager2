@@ -407,7 +407,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
                   <th>Дата выселения</th>
                   <th>Общая стоимость</th>
                 </tr>
-                <tr>
+                {/* <tr>
                   <td>{}</td>
                   <td>{}</td>
                   <td>{}</td>
@@ -416,7 +416,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
                   <th>Дата выселения</th>
                   <th>Общая стоимость</th>
                   <th><button className="btn" onClick={() => handleAddSelectResidence()}>Добавить</button></th>
-                </tr>
+                </tr> */}
               </thead>
               <tbody>
                 {selectedResidence.map((row, index) => (
@@ -492,7 +492,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
             <div>
               <button className="btn" onClick={() => handleDeleteStudent(selectedStudent.student_id)}>Удалить</button>
               <button className="btn" onClick={() => handleUpdateStudent(selectedStudent)}>Изменить</button>
-              <Link to={`/admins/users/${selectedStudent.student_id}/${selectedStudent.user_id}/`}>Редактировать пользователя</Link>
+              <Link className="btn" to={`/admins/users/${selectedStudent.student_id}/${selectedStudent.user_id}/`}>Редактировать пользователя</Link>
 
               <button className="btn" onClick={() => handleCloseEditForm(true)}>Закрыть</button>
             </div>

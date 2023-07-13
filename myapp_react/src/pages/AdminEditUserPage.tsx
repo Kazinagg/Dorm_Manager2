@@ -352,8 +352,8 @@ const AdminEditUserPage: React.FC = () => {
                                             Общая стоимость: {info.total_cost}<br />
                                         </Typography.Paragraph>
                                         <div className="checkbox-wrapper-26">
-                                            <input type="checkbox" id="_checkbox-26{info.residence_id}" checked={info.payment} onChange={(event) => handleCheckboxChange(info.residence_id, event)}/>
-                                            <label htmlFor="_checkbox-26{info.residence_id}">
+                                            <input type="checkbox" id={String(info.residence_id)} checked={info.payment} onChange={(event) => handleCheckboxChange(info.residence_id, event)}/>
+                                            <label htmlFor={String(info.residence_id)}>
                                                 <div className="tick_mark"></div>
                                             </label>
                                         </div>

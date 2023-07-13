@@ -61,10 +61,13 @@
 
 
 
-
+.checkbox-wrapper-10{
+  margin: 10px 0px 10px 0px;
+}
 
 .checkbox-wrapper-10 .tgl {
   display: none;
+  /* margin: 1000px; */
 }
 .checkbox-wrapper-10 .tgl,
 .checkbox-wrapper-10 .tgl:after,
